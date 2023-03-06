@@ -106,9 +106,9 @@ if(!validateAge){
 
   //Estrategia Github
   passport.use('github', new GitHubStrategy({
-    clientID: process.env.CLIENT_ID_GITHUB,
-    clientSecret: process.env.CLIENT_SECRET_GITHUB,
-    callBackURL: process.env.CALLBACK_URL_GITHUB
+    clientID: "Iv1.535d8ad33b02c25a",
+    clientSecret: "cfd404206ff60cbb738bcd20a3a3c5f2cc6ac4fc",
+    callBackURL: "http://localhost:8080/githubcallback"
   },async(accessToken,refreshToken,profile,done)=>{
     try{
       console.log(profile._json)
