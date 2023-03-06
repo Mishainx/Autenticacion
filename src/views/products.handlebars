@@ -1,0 +1,47 @@
+
+<div id="listProductsContainer" class="listProductsContainer">
+    
+{{#if user}}
+    <h3 class="welcomeTitle">Bienvenido {{user.name}} ({{user.rol}})</h3>
+{{/if}}
+
+    <div id="messageDiv"></div>
+
+    {{#if message}}
+        <h3 style="text-align: center;">{{message}}</h3>
+    {{else}}
+    <div class="listProductsC">
+        {{#each productList.docs}}
+        <div class="itemProductContainer">
+            <div class="itemProductId"><p>Id:</p><p class="productViewId">{{this.id}}</p></div>
+            <p>Nombre: {{this.title}}</p>
+            <p>Description: {{this.description}}</p>
+            <p>Price: {{this.price}}</p>
+            <p>Stock: {{this.stock}}</p>
+            <p>Code: {{this.code}}</p>
+
+            <div>
+                <input type="number" class="productQuantity" min="1" value="1">
+                <button class="productQuantityButton">Agregar al carrito</button>
+            </div>
+
+        </div>
+        {{/each}}
+    </div>
+    <div class="productControlsContainer">
+        {{#if productList.hasPrevPage}}
+            <button id="prevPageButton" ><a href="{{productList.prevLink}}">Prev Page</a></button>
+        {{/if}}
+        <p>{{productList.page}}</p>
+
+        {{#if productList.hasNextPage}}
+            <button id="nextPageButton"><a href="{{productList.nextLink}}">Next Page</a></button>
+        {{/if}}
+    </div>
+        {{/if}}
+
+    
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/products.js"></script>
