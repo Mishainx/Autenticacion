@@ -3,14 +3,15 @@ const routerViews = Router();
 const messages = []
 import {productModel} from "../data/models/products.model.js"
 import cartModel from "../data/models/carts.model.js"
-import { assignedCart } from "../app.js";
 import userModel from "../data/models/user.model.js";
+export let assignedCart;
+import { passportCall } from "../../utils.js";
 
 
 // RouterViews.get "Home" devuelve una vista  del listado de productos sin socket server
-routerViews.get('/home',auth, async (req,res)=>{
+routerViews.get('/home', auth, async (req,res)=>{
     try{
-        let cartDirection = await assignedCart._id
+        let cartDirection = req.user.cart
         const productsList = await productModel.find().lean()
         res.status(200).render('home',{styleSheets:'css/styles',productsList, cartDirection})
     }
@@ -22,7 +23,7 @@ routerViews.get('/home',auth, async (req,res)=>{
 // RouterViews.GET "Real Time Products" devuelve una vista  del listado de productos que actualiza cambios en vivo con socket server
 routerViews.get('/realTimeProducts',auth, async (req,res)=>{
     try{
-      let cartDirection = await assignedCart._id
+      let cartDirection = req.user.cart
         const productsList = await productModel.find().lean()
         res.status(200).render('realTimeProducts',{styleSheets:'css/styles',productsList, cartDirection})
     }
@@ -40,10 +41,11 @@ routerViews.get('/products',auth, async (req,res)=>{
         rol: req.session.admin? "Admin": "User",
         name: findUser.first_name,
         surname: findUser.last_name,
-        age: findUser.age
+        age: findUser.age,
+        cart:  req.user.cart
       }
-
-      let cartDirection = await assignedCart._id
+        assignedCart = user.cart
+        let cartDirection = user.cart
         const limit = req.query.limit || 10
         const page = req.query.page || 1
         let category = req.query.category || undefined
@@ -169,7 +171,7 @@ routerViews.get("/chat",auth,async(req,res)=>{
 })
 
 routerViews.get("/carts/:cid",auth,async (req,res)=>{
-  let cartDirection = await assignedCart._id
+    let cartDirection = req.user.cart
     const cartId = req.params.cid
     let cart;
 
@@ -206,6 +208,5 @@ export function auth(req,res,next){
   }
   return res.status(401).redirect("/login")
 }
-
 
 export default routerViews

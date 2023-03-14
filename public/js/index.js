@@ -48,7 +48,6 @@ elementExists("send") &&
 
         }
       })
-
       .catch((error) => alert("usuario no encontrado"))
       .catch((error) => alert("usuario no encontrado"));
   });

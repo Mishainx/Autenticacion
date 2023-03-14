@@ -18,7 +18,6 @@ for(let btn of buttonsQuantity){
         let item ={
             id: selectedProductId    ,
             quantity: father.querySelector("input").value,
-            father:father
         }
         socket.emit("sendItem", item)
 

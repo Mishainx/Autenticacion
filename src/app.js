@@ -18,11 +18,11 @@ import { __dirname } from '../utils.js';
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import sessionsRouter from "./routes/sessions.router.js";
+import sessionsRouter from "./routes/sessions.routes.js";
 import rootRouter from "./routes/root.routes.js";
-export let assignedCart;
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import { assignedCart } from "./routes/views.routes.js";
 
 //Configuración dotenv
 dotenv.config();
@@ -37,7 +37,6 @@ const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.tjewfez.
 const httpServer = app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   await messageModel.updateMany({},{status:false})
-  assignedCart = await cartManager.create()
 });
 
 //Inicialización Socket server
@@ -83,6 +82,32 @@ app.post("/socketMessage", (req, res) => {
   res.send("ok");
 });
 
+//Configuración enviroment MongoDB
+const environment = async () => {
+  try {
+    await mongoose.connect(
+      `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.tjewfez.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
+    );
+    console.log("Conectado a MongoDB");
+  } catch (error) {
+    console.log(`Error al conectar a MongoDB: ${error}`);
+    console.log(DB_USER+DB_PASS+DB_NAME)
+  }
+};
+
+const isValidStartData = () => {
+  if (DB_PASS && DB_USER) return true;
+  else return false;
+};
+console.log("isValidStartData", isValidStartData());
+isValidStartData() && environment();
+
+// Middleware para agregar a las variables locales del objeto Response los datos de sesión.
+app.use((req, res, next)=>{ 
+  res.locals.session = req.session;
+  next();
+})
+
 //Configuración socket server
 socketServer.on("connection", async(socket) => {
 
@@ -113,10 +138,10 @@ socketServer.on("connection", async(socket) => {
 
    socket.on("sendItem",async (data)=>{
       try{
-        let selectedCart = await cartModel.find({_id: assignedCart._id})
+        console.log(assignedCart)
+        let selectedCart = await cartModel.find({_id: assignedCart})
         let productExistInCart = selectedCart[0].products.find((product)=>product.product == data.id)
         let checkStock = await productModel.findById(data.id)
-        let father = data.father
         
         if(parseInt(data.quantity)>checkStock.stock){
           let message = "La cantidad solicitada es mayor que el stock disponible"
@@ -132,8 +157,8 @@ socketServer.on("connection", async(socket) => {
           let productIndex = selectedCart[0].products.findIndex((product)=> product.product == data.id)
           selectedCart[0].products[productIndex].quantity = newQuantity
         }
-    
-        let result = await cartModel.updateOne({_id:assignedCart._id},selectedCart[0])
+
+        let result = await cartModel.updateOne({_id:assignedCart},selectedCart[0])
         socket.emit("addSuccess",{status:"succes", result})
       }
       catch (err) {
@@ -142,35 +167,8 @@ socketServer.on("connection", async(socket) => {
     })
 
     socket.on("deleteItemCart",async(data)=>{
-      console.log( "hola")
     })
   });
-
-//Configuración enviroment MongoDB
-const environment = async () => {
-  try {
-    await mongoose.connect(
-      `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.tjewfez.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
-    );
-    console.log("Conectado a MongoDB");
-  } catch (error) {
-    console.log(`Error al conectar a MongoDB: ${error}`);
-    console.log(DB_USER+DB_PASS+DB_NAME)
-  }
-};
-
-const isValidStartData = () => {
-  if (DB_PASS && DB_USER) return true;
-  else return false;
-};
-console.log("isValidStartData", isValidStartData());
-isValidStartData() && environment();
-
-// Middleware para agregar a las variables locales del objeto Response los datos de sesión.
-app.use((req, res, next)=>{ 
-  res.locals.session = req.session;
-  next();
-})
 
 //Rutas express
 app.use("/messages", messageRoute);

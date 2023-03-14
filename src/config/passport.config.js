@@ -6,6 +6,9 @@ import userModel from "../data/models/user.model.js";
 import GitHubStrategy from 'passport-github2'
 const LocalStrategy = local.Strategy;
 import * as dotenv from "dotenv";
+import cartModel from "../data/models/carts.model.js";
+import { CartManager } from "../data/classes/DBManager.js";
+const cartManager = new CartManager();
 
 dotenv.config();
 
@@ -67,6 +70,7 @@ if(!validateAge){
   return done(null,false,{message:"Ingrese una edad válida entre 1 y 99 años"})
 }
         try {
+          let tutu = await cartManager.create()
           let user = await userModel.findOne({ email: email });
           if (user) {
             console.log("El usuario ya existe");
@@ -78,6 +82,8 @@ if(!validateAge){
             email,
             age,
             password: createHash(password),
+            role: email == "adminCoder@coder.com"? "Admin": "User",
+            cart: await cartManager.create()
           };
           let result = await userModel.create(newUser);
           return done(null, result);
