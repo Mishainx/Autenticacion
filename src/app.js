@@ -140,7 +140,6 @@ socketServer.on("connection", async(socket) => {
 
    socket.on("sendItem",async (data)=>{
       try{
-        console.log(assignedCart)
         let selectedCart = await cartModel.find({_id: assignedCart})
         let productExistInCart = selectedCart[0].products.find((product)=>product.product == data.id)
         let checkStock = await productModel.findById(data.id)
@@ -174,7 +173,6 @@ socketServer.on("connection", async(socket) => {
       socket.emit("deleteSuccess", "Producto eliminado exitosamente")
       let cart = await cartModel.findById(assignedCart)
       let cartLength = cart.products.length
-      console.log(cartLength)
       if (cartLength == 0){
         socket.emit("emptyCart", "El carrito no cuenta con productos aún")
       } 
