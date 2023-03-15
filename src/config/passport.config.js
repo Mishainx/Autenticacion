@@ -73,7 +73,7 @@ if(!validateAge){
           let user = await userModel.findOne({ email: email });
           if (user) {
             console.log("El usuario ya existe");
-            return done(null, false);
+            return done(null, false,{message: "El usuario ya existe"});
           }
           const newUser = {
             first_name,

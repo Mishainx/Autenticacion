@@ -3,12 +3,12 @@ const sessionsRouter = Router();
 import passport from "passport";
 
 
-sessionsRouter.post("/signup", passport.authenticate('register',{failureRedirect:'/failregister'}),async(req,res)=>{
+sessionsRouter.post("/signup", passport.authenticate('register',{failureRedirect:'/failregister',failureFlash:true}),async(req,res)=>{
   res.send({status:"success", message:"Usuario registrado exitosamente"})
 })
 
 
-sessionsRouter.post("/login", passport.authenticate('login',{failureRedirect:"/faillogin"}), async(req,res)=>{
+sessionsRouter.post("/login", passport.authenticate('login',{failureRedirect:"/faillogin",failureFlash:true}), async(req,res)=>{
   if(!req.user) return res.status(400).send({status:"error", error: "Credenciales inválidas"})
   req.session.user ={
     first_name: req.user.first_name,
