@@ -28,9 +28,10 @@ elementExists("send") &&
           window.location.href = "/api/views/products"
         }
         else if(data.status === "error"){
+          console.log(data)
           loginError.innerHTML = ""
           let loginErrorP = document.createElement("p")
-          loginErrorP.innerText = data.message
+          loginErrorP.innerText = data.message == "Missing credentials"? "Ingrese usuario y contraseña" : data.message
           loginErrorP.style.color="rgb(188, 36, 36)"
           loginErrorP.style.fontSize = "15px"
           loginErrorP.style.textAlign = "center"
@@ -75,18 +76,18 @@ elementExists("signup") &&
           signUpP.style.fontSize = "15px"
           signUpP.style.textAlign = "center"
           signUpP.style.padding = "10px"
-
           signUpMessage.append(signUpP)
         }
 
         else if(data.status == "error"){
           signUpMessage.innerHTML = ""
           let signUpP = document.createElement("p")
-          signUpP.innerText = data.message
+          signUpP.innerText = data.message == "Missing credentials"? "Para registrar un usuario todos los campos deben estar completos" : data.message
           signUpP.style.color="rgb(188, 36, 36)"
           signUpP.style.fontSize = "15px"
           signUpP.style.textAlign = "center"
           signUpP.style.padding = "10px"
+          signUpP.style.maxWidth = "250px"
 
           signUpMessage.append(signUpP)	
         }

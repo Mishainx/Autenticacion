@@ -59,8 +59,6 @@ async deleteCartProduct(cartId,productId){
 
   try {
     const selectedCart = await cartModel.findById(cartId)
-    console.log(selectedCart)
-    console.log(productId)
     const newCart = await cartModel.findByIdAndUpdate(cartId,{products: selectedCart.products.filter((product)=>product.product!=productId)})
   }
   catch (err) {

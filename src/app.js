@@ -23,6 +23,7 @@ import rootRouter from "./routes/root.routes.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import { assignedCart } from "./routes/views.routes.js";
+import flash from "connect-flash"
 
 //Configuración dotenv
 dotenv.config();
@@ -46,6 +47,7 @@ const socketServer = new Server(httpServer)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(flash())
 
 //Mongo store para crear sesiones
 app.use(
@@ -166,7 +168,16 @@ socketServer.on("connection", async(socket) => {
       }
     })
 
-    socket.on("deleteItemCart",async(data)=>{
+    socket.on("deleteCartItem",async(data)=>{
+      let deleteProductId = data
+      await cartManager.deleteCartProduct(assignedCart, deleteProductId)
+      socket.emit("deleteSuccess", "Producto eliminado exitosamente")
+      let cart = await cartModel.findById(assignedCart)
+      let cartLength = cart.products.length
+      console.log(cartLength)
+      if (cartLength == 0){
+        socket.emit("emptyCart", "El carrito no cuenta con productos aún")
+      } 
     })
   });
 

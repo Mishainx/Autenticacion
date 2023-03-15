@@ -22,7 +22,7 @@ const initializePassport = () => {
         passReqToCallback: true,
         usernameField: "email",
       },
-async (req, email, password, done) => {
+    async (req, email, password, done) => {
         
     const { first_name, last_name, age } = req.body;
 
@@ -38,7 +38,6 @@ async (req, email, password, done) => {
   if(!!!first_name || !!!last_name || !!!email || !!!age || !!!password){
     console.log("todos los campos deben ser completados")
     return done(null,false,{message:"Todos los campos deben ser completados"})
-
   }
 
   //Comprobación de la estructura y validez del campo email
@@ -100,9 +99,9 @@ if(!validateAge){
         const user = await userModel.findOne({email:username})
         if(!user){
             console.log("El usuario no existe")
-            return done (null,false)
+            return done (null,false,{message:"El usuario no existe"})
         }
-        if(!isValidPassword(password,user.password))return done(null,false);
+        if(!isValidPassword(password,user.password))return done(null,false, {message:"Credenciales inválidas"});
         return done(null,user)
     }
     catch(error){
@@ -125,7 +124,8 @@ if(!validateAge){
           last_name: profile._json.last_name? null : profile._json.last_name,
           age: 18,
           email: profile._json.email,
-          password: ""
+          password: "",
+          cart: await cartManager.create()
         }
         let result = await userModel.create(newUser);
         done(null,result);

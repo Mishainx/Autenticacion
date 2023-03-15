@@ -38,7 +38,7 @@ routerViews.get('/products',auth, async (req,res)=>{
       let findUser = await userModel.findOne({email:req.session.user.email})
       let user ={
         email: req.session.user.email,
-        rol: req.session.admin? "Admin": "User",
+        role: findUser.role,
         name: findUser.first_name,
         surname: findUser.last_name,
         age: findUser.age,

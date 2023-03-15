@@ -5,6 +5,7 @@ let noNav = true
 import { auth } from "./views.routes.js";
 import passport from "passport";
 import { isLog } from "../../utils.js";
+import { passportCall } from "../../utils.js";
 
 // La ruta /login (get) renderiza la vista login a partir de la cual es posible iniciar la sesión al usuario
 rootRouter.get("/login",isLog, async (req,res)=>{
@@ -16,7 +17,7 @@ rootRouter.get("/login",isLog, async (req,res)=>{
    }
 })
 
-rootRouter.post('/login',passport.authenticate('login',{failureRedirect:'faillogin'}),async(req,res)=>{
+rootRouter.post('/login',passport.authenticate('login',{failureRedirect:'faillogin',failureFlash:true}),async(req,res)=>{
   if(!req.user) return res.status(400).send({status:"error", error: "Credenciales inválidas"})
     req.session.user ={
     first_name: req.user.first_name,
@@ -40,7 +41,7 @@ rootRouter.post('/login',passport.authenticate('login',{failureRedirect:'faillog
   }
 })
 
-rootRouter.post("/signup", passport.authenticate('register',{failureRedirect:'/failregister'}),async(req,res)=>{
+rootRouter.post("/signup", passport.authenticate('register',{failureRedirect:'/failregister', failureFlash:true}),async(req,res)=>{
   res.send({status:"success", message:"Usuario registrado exitosamente"})
 })
 
@@ -59,7 +60,7 @@ rootRouter.get("/profile",auth,async (req,res)=>{
     let findUser = await userModel.findOne({email:req.session.user.email})
     let user ={
       email: req.session.user.email,
-      rol: req.session.admin? "Admin": "User",
+      role: findUser.role,
       name: findUser.first_name,
       surname: findUser.last_name,
       age: findUser.age
@@ -90,12 +91,16 @@ rootRouter.get("/logout",(req,res)=>{
 
 rootRouter.get('/failregister',async(req,res)=>{
   console.log("Failed Strategy")
-  res.send({error:"Failed"})
+  let errorFlash = req.flash()
+  let message = errorFlash.error[0]
+  res.send({status:"error", message})
 })
 
 rootRouter.get('/failLogin',async(req,res)=>{
+  let errorFlash = req.flash()
+  let message = errorFlash.error[0]
   console.log("Failed Login Strategy")
-  res.send({error:"Failed"})
+  res.send({status:"error", message})
 })
 
 rootRouter.get('*',(req,res)=>{

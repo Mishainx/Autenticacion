@@ -1,5 +1,5 @@
 {{#if cart }}
-<div class="cartContainer">
+<div class="cartContainer" id ="cartContainer">
     <h3>Cart Id: {{cart._id}}</h3>
     <div>
     {{#each cart.products}}
@@ -30,4 +30,5 @@
 
 </div>
 
+<script src="/socket.io/socket.io.js"></script>
 <script src="/js/carts_Id.js"></script>
