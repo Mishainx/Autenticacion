@@ -393,6 +393,100 @@
 					]
 				}
 			},
+			"response": [
+				{
+					"name": "sessions/login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"adminCoder@coder.com\",\r\n    \"password\": \"adminCod3r123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/sessions/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"sessions",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "cooderCookieToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXIiOnsiZmlyc3RfbmFtZSI6IkNvZGVyIiwibGFzdF9uYW1lIjoiQ29kZXIiLCJhZ2UiOjE4LCJlbWFpbCI6ImFkbWluQ29kZXJAY29kZXIuY29tIn19LCJpYXQiOjE2Nzg2Mjg4NjEsImV4cCI6MTY3ODYyODkyMX0.tmXmE7mzJRJt_3d0zwx6g-JWl0yAmzSUZ6pYOLHVPAE; Max-Age=3600; Path=/; Expires=Sun, 12 Mar 2023 14:47:41 GMT; HttpOnly"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "connect.sid=s%3AMcBLP7NOmqNxSgQ8394S1yfTx8JF95EA.iSVro%2BbYvOCfbX61fLu5TxNzu8yu0mK9IHMi0VERNzo; Path=/; HttpOnly"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "340"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"154-VcmpfHkYWos12oDOb+oMr5+vi0I\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 12 Mar 2023 13:47:41 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Usuario logueado exitósamente\",\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXIiOnsiZmlyc3RfbmFtZSI6IkNvZGVyIiwibGFzdF9uYW1lIjoiQ29kZXIiLCJhZ2UiOjE4LCJlbWFpbCI6ImFkbWluQ29kZXJAY29kZXIuY29tIn19LCJpYXQiOjE2Nzg2Mjg4NjEsImV4cCI6MTY3ODYyODkyMX0.tmXmE7mzJRJt_3d0zwx6g-JWl0yAmzSUZ6pYOLHVPAE\"\n}"
+				}
+			]
+		},
+		{
+			"name": "current",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/sessions/current",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"sessions",
+						"current"
+					]
+				}
+			},
 			"response": []
 		}
 	]
