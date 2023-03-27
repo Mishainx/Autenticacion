@@ -1,16 +1,12 @@
-
 import passport from "passport";
 import local from "passport-local";
-import { createHash, isValidPassword } from "../../utils.js";
-import userModel from "../data/models/user.model.js";
+import { createHash, isValidPassword } from "../config/utils.js";
+import userModel from "../dao/mongo/models/user.model.js";
 import GitHubStrategy from 'passport-github2'
 const LocalStrategy = local.Strategy;
-import * as dotenv from "dotenv";
-import cartModel from "../data/models/carts.model.js";
-import { CartManager } from "../data/classes/DBManager.js";
+import { CartManager } from "../dao/mongo/DBManager.js";
 const cartManager = new CartManager();
-
-dotenv.config();
+import config from "../config/config.js"
 
 const initializePassport = () => {
   
@@ -111,9 +107,9 @@ if(!validateAge){
 
   //Estrategia Github
   passport.use('github', new GitHubStrategy({
-    clientID: process.env.CLIENT_ID_GITHUB,
-    clientSecret: process.env.CLIENT_SECRET_GITHUB,
-    callBackURL: process.env.CALLBACK_URL_GITHUB
+    clientID: config.CLIENT_ID_GITHUB,
+    clientSecret: config.CLIENT_SECRET_GITHUB,
+    callBackURL: config.CALLBACK_URL_GITHUB
   },async(accessToken,refreshToken,profile,done)=>{
     try{
       console.log(profile._json)

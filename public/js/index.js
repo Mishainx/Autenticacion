@@ -23,11 +23,11 @@ elementExists("send") &&
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (data.message === "success") {
+        .then((data) => {
+        if (data.message == "success") {
           window.location.href = "/api/views/products"
         }
-        else if(data.status === "error"){
+        else if(data.status == "error"){
           console.log(data)
           loginError.innerHTML = ""
           let loginErrorP = document.createElement("p")
@@ -59,13 +59,13 @@ elementExists("signup") &&
     const formData = new FormData(myForm);
     const data = Object.fromEntries(formData);
 
-    fetch("/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
+      fetch("/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
       .then((response) => response.json())
       .then((data) =>{
         if(data.status == "success"){

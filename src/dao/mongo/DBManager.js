@@ -1,6 +1,5 @@
-import cartModel from "../models/carts.model.js";
-import {productModel} from "../models/products.model.js";
-
+import cartModel from "../mongo/models/carts.model.js";
+import {productModel} from "../mongo/models/products.model.js";
 
 // Configuración CartManager
 class CartManager {

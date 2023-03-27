@@ -7,14 +7,14 @@ import { Server } from "socket.io";
 import { engine } from "express-handlebars";
 import routerViews from "./routes/views.routes.js";
 import messageRoute from "./routes/messages.routes.js";
-import {messageModel } from "./data/models/messages.model.js";
-import { CartManager, ProductManager } from "./data/classes/DBManager.js";
-import { productModel } from "./data/models/products.model.js";
-import cartModel from "./data/models/carts.model.js";
+import {messageModel } from "./dao/mongo/models/messages.model.js";
+import { CartManager, ProductManager } from "./dao/mongo/DBManager.js";
+import { productModel } from "./dao/mongo/models/products.model.js";
+import cartModel from "./dao/mongo/models/carts.model.js";
 const classManager= new ProductManager
 const cartManager = new CartManager();
 const mensajes = []
-import { __dirname } from '../utils.js';
+import { __dirname } from './config/utils.js';
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 import session from "express-session";
@@ -22,17 +22,19 @@ import sessionsRouter from "./routes/sessions.routes.js";
 import rootRouter from "./routes/root.routes.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-import { assignedCart } from "./routes/views.routes.js";
+import { assignedCart } from "./controllers/views.controllers.js";
 import flash from "connect-flash"
+import config from "./config/config.js";
 
 //Configuración dotenv
 dotenv.config();
 export const app = express();
-const PORT = process.env.SERVER_PORT || 8181;
-const DB_USER = process.env.DB_USER;
-const DB_PASS = process.env.DB_PASS;
-const DB_NAME = process.env.DB_NAME;
-const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.tjewfez.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`
+const PORT = config.PORT ;
+const DB_USER = config.DB_USER;
+const DB_PASS = config.DB_PASS;
+const DB_NAME = config.DB_NAME;
+const DB_CLUSTER = config.MONGO_CLUSTER
+const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASS}${DB_CLUSTER}${DB_NAME}?retryWrites=true&w=majority`
 
 //Configuración del servidor
 const httpServer = app.listen(PORT, async () => {
@@ -46,6 +48,8 @@ const socketServer = new Server(httpServer)
 //Middelware para trabajar con archivos .Json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Cookie parser y connect-flash
 app.use(cookieParser());
 app.use(flash())
 
@@ -76,6 +80,7 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname+"/src/views")
 app.use(express.static(__dirname +'/public'));
+
 
 app.post("/socketMessage", (req, res) => {
   const { message } = req.body;

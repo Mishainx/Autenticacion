@@ -1,10 +1,10 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-const __filename = fileURLToPath(import.meta.url);
+const _filename = fileURLToPath(import.meta.url);
+const __filename = _filename.slice(0,-15)
 export const __dirname = dirname(__filename);
 import bcrypt from 'bcrypt'
 import passport from 'passport';
-import { Strategy } from 'passport-local';
 
 //Funciones de haseo con Bcrypt
 export const createHash = (password) =>
@@ -32,6 +32,13 @@ export const isValidPassword = (password, user) =>
         next()
       })(req,res,next)
     }
+  }
+
+  export const auth = async (req,res,next)=>{
+    if(req.session?.user != undefined){
+      return next()
+    }
+    return res.status(401).redirect("/login")
   }
 
   

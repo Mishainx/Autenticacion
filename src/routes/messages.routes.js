@@ -1,20 +1,8 @@
 import { Router } from "express";
-import { messageModel } from "../data/models/messages.model.js";
-
+import { getMessages, getMessagesArray } from "../controllers/messages.controllers.js";
 const router = Router();
 
-router.get("/", async (req, res) => {
-  try {
-    let users = await messageModel.find();
-    console.log(users);
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json({ error: err });
-  }
-});
+router.get("/", getMessages);
+router.get("/", getMessagesArray);
 
-router.get("/", (req, res) => {
-  let messages = [];
-  res.json(messages);
-});
 export default router;
