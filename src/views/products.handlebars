@@ -15,15 +15,23 @@
         <div class="itemProductContainer">
             <div class="itemProductId"><p>Id:</p><p class="productViewId">{{this.id}}</p></div>
             <p>Nombre: {{this.title}}</p>
-            <p>Description: {{this.description}}</p>
+            <p>Descripción: {{this.description}}</p>
             <p>Price: {{this.price}}</p>
-            <p>Stock: {{this.stock}}</p>
+            {{#if this.stock}}
+            <p id="productStock" class="productStock">Stock: {{this.stock}}</p>
+            {{/if}}
             <p>Code: {{this.code}}</p>
 
+                {{#if this.stock}}
             <div>
                 <input type="number" class="productQuantity" min="1" value="1">
                 <button class="productQuantityButton">Agregar al carrito</button>
             </div>
+                {{else}}
+                <div>
+                    <p class="noStock">Sin stock</p>
+                </div>
+                {{/if}}
 
         </div>
         {{/each}}

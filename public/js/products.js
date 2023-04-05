@@ -4,6 +4,7 @@ let buttonsQuantity = document.querySelectorAll(".productQuantityButton")
 let listProductsContainer = document.getElementById("listProductsContainer")
 let messageDiv = document.getElementById("messageDiv")
 
+
 //Configuración para agregar el producto al carrito
 for(let btn of buttonsQuantity){
 
@@ -14,14 +15,31 @@ for(let btn of buttonsQuantity){
         let father = child.parentNode
         let grand = father.parentNode
         let selectedProductId = grand.childNodes[1].childNodes[1].innerText
+        let productStock = grand.childNodes[9]
 
         let item ={
             id: selectedProductId    ,
             quantity: father.querySelector("input").value,
         }
+
+
         socket.emit("sendItem", item)
 
-        }   
+
+        socket.once("addSuccess",async(data)=>{
+            if(data.newProduct.stock >0){
+                productStock.innerText =  `stock: ${data.newProduct.stock} ` 
+            }
+            else{
+                productStock.innerHTML=""
+                father.innerText = "Sin stock"
+                father.classList.add("noStock")
+            }
+        })
+
+
+    }
+        
     }
 
     socket.on("stockError",async(data)=>{
@@ -35,7 +53,6 @@ for(let btn of buttonsQuantity){
 })
 
 socket.on("addSuccess",async(data)=>{
-    console.log(data)
     let successP = document.createElement("p")
     messageDiv.innerHTML = ""
     successP.innerText = "* Producto agregado exitósamente al carrito"

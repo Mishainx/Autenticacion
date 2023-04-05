@@ -1,6 +1,8 @@
-import { ProductManager } from "../dao/mongo/DBManager.js";
-import { productModel } from "../dao/mongo/models/products.model.js";
-const productManager = new ProductManager();
+import { Products } from "../dao/persistence.js";
+import ProductRepository from "../repository/product.repository.js";
+
+let products = new Products()
+let productRepository = new ProductRepository(products)
 
 const getProducts = async (req, res) => {
     try {
@@ -40,7 +42,7 @@ const getProducts = async (req, res) => {
   
           //Validación en caso de que se haya ingresado query por categoría
           if(category!=undefined){
-            const checkCategory = await productModel.exists({category:category})
+            const checkCategory = await productRepository.propProducts({category:category})
             if(!checkCategory){
               res.status(400).send({status:"Error",payload:"La categoría ingresada es inexistente"})
               return
@@ -49,7 +51,7 @@ const getProducts = async (req, res) => {
           }
   
       // Se realiza la paginación conforme los querys seleccionados
-      let productlist= await productModel.paginate({...category,...stockQuery},{limit:limit, page:page, sort: {price:sort}})
+      let productlist= await productRepository.getPaginateProducts(category,stockQuery,limit,page,sort)//await productModel.paginate({...category,...stockQuery},{limit:limit, page:page, sort: {price:sort}})
       
       //Configuración prevLink
       let actualUrl = req.originalUrl
@@ -143,7 +145,7 @@ const getProduct = async(req,res)=>{
     }
   
     //Comprobación de la existencia del producto
-    const productExist = await productModel.findById(id)
+    const productExist = await productRepository.getIdProducts(id)
   
     if(productExist==null){
       res.status(400).send({error:"No existe un producto con la Id ingresada"})
@@ -152,7 +154,7 @@ const getProduct = async(req,res)=>{
   
     // Si la Id es válida y el producto existe se devuelve el producto solicitado
     try{
-      const result = await productManager.getProductByID(id)
+      const result = await productRepository.getIdProducts(id)
       res.status(200).send({status:"success",payload:result})
     }
     catch (err) {
@@ -187,7 +189,7 @@ const createProduct = async (req, res) => {
     }
   
     // Comprobación del código de producto para evitar que se repita
-    const codeExist = await productModel.findOne({code:code})
+    const codeExist = await productRepository.findCodeProducts(code)
   
     if(codeExist){ 
       res.status(400).send({error: "El código ingresado ya existe"})
@@ -195,7 +197,7 @@ const createProduct = async (req, res) => {
     }
   
     try {
-      const response = await productManager.create({
+      const response = await productRepository.createProducts({
         title,
         description,
         code,
@@ -221,7 +223,7 @@ const deleteProduct = async (req, res) => {
     }
   
     //Comprobación de la existencia del producto.
-    const productExist = await productModel.findById(id)
+    const productExist = await productRepository.getIdProducts(id)
   
     if(productExist==null){
       res.status(400).send({error:"No existe un producto con la Id ingresada"})
@@ -230,7 +232,7 @@ const deleteProduct = async (req, res) => {
   
     //Si se comprueba la Id se ejecutan las acciones para eliminar el producto.
     try {
-      const result = await productManager.delete(id);
+      const result = await productRepository.deleteProducts(id);
   
       res.status(200).send({ message: "Producto eliminado", result });
     } catch (err) {
@@ -249,7 +251,7 @@ const updateProduct = async (req, res) => {
     }
   
     //Comprobación de la existencia del producto.
-    const productExist = await productModel.findById(pid)
+    const productExist = await productRepository.getIdProducts(pid)
   
     if(productExist==null){
       res.status(400).send({error:"No existe un producto con la Id ingresada"})
@@ -258,8 +260,8 @@ const updateProduct = async (req, res) => {
   
     //Si se comprueba la Id se ejecutan las acciones para actualizar el producto.
     try{
-      let newProperty = await productModel.findByIdAndUpdate(pid,property)
-      const response = await productManager.getProductByID(pid)
+      let newProperty = await productRepository.updateProducts(pid,property)
+      const response = await productRepository.getIdProducts(pid)
       res.status(200).send({message:"Producto actualizado exitósamente", response})
     }
     catch (err) {

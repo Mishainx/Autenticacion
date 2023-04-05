@@ -1,7 +1,7 @@
 {{#if cart }}
 <div class="cartContainer" id ="cartContainer">
     <h3>Cart Id: {{cart._id}}</h3>
-    <div>
+    <div class="cartListContainer">
     {{#each cart.products}}
     <div class="= itemContainer">
         <div>
@@ -12,23 +12,25 @@
         <p >Cantidad: {{this.quantity}}</p>
         </div   >
         <i class="fa-solid fa-trash btnTrash"></i>
-        </div>
-
+    </div>
     {{else}}
     <div class="noProductsCart">
         <p>El Cart no cuenta con productos aún</p>        
     </div>
-    {{/each}}  
+    {{/each}}
+  
     </div>
+    <button id="purchaseButton" class="purchaseButton">Finalizar compra</button>
+
 {{else}}
 <div class="cartErrorContainer">
     <h3>{{message}}</h3>
+</div>
 </div>
 
 {{/if}}
 
 
-</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/carts_Id.js"></script>

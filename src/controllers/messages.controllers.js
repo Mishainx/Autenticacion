@@ -1,9 +1,12 @@
-import { messageModel } from "../dao/mongo/models/messages.model.js"
+import { Messages } from "../dao/persistence.js";
+const message = new Messages()
+import MessageRepository from "../repository/message.repository.js";
+const messageRepository = new MessageRepository(message)
+
 
 const getMessages = async (req, res) => {
     try {
-      let users = await messageModel.find();
-      console.log(users);
+      let users = await messageRepository.getMessage()
       res.status(200).json(users);
     } catch (err) {
       res.status(500).json({ error: err });

@@ -124,6 +124,9 @@ main{
 .cartContainer{
     box-shadow: rgba(255, 252, 252, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .cartContainer h3{
@@ -270,4 +273,26 @@ text-align: center;
 
 .gitLogo{
     width: 25px;
+}
+
+.cartListContainer{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.buyP{
+    margin: 10px;
+}
+
+#backButton{
+    margin:auto
+}
+
+.noStock{
+    color: red;
+    font-size: 15;
+    border: red;
+    border-radius: 3px;
+    text-align: center;
 }

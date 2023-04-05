@@ -1,12 +1,19 @@
 import passport from "passport";
 import local from "passport-local";
 import { createHash, isValidPassword } from "../config/utils.js";
-import userModel from "../dao/mongo/models/user.model.js";
 import GitHubStrategy from 'passport-github2'
 const LocalStrategy = local.Strategy;
-import { CartManager } from "../dao/mongo/DBManager.js";
-const cartManager = new CartManager();
 import config from "../config/config.js"
+import { Users } from "../dao/persistence.js";
+import UserRepository from "../repository/user.repository.js";
+import { Carts } from "../dao/persistence.js";
+import CartRepository from "../repository/cart.repository.js";
+import userModel from "../dao/mongo/models/user.model.js";
+const carts = new Carts()
+const cartRepository = new CartRepository(carts)
+
+const users = new Users()
+const userRepository = new UserRepository(users)
 
 const initializePassport = () => {
   
@@ -65,8 +72,7 @@ if(!validateAge){
   return done(null,false,{message:"Ingrese una edad válida entre 1 y 99 años"})
 }
         try {
-          let tutu = await cartManager.create()
-          let user = await userModel.findOne({ email: email });
+          let user = await userRepository.getOneUsers({ email: email });
           if (user) {
             console.log("El usuario ya existe");
             return done(null, false,{message: "El usuario ya existe"});
@@ -78,9 +84,9 @@ if(!validateAge){
             age,
             password: createHash(password),
             role: email == "adminCoder@coder.com"? "Admin": "User",
-            cart: await cartManager.create()
+            cart: await cartRepository.createCarts()
           };
-          let result = await userModel.create(newUser);
+          let result = await userRepository.create(newUser);
           return done(null, result);
         } catch (err) {
           return done("Error al registrar el usuario", false);
@@ -89,15 +95,17 @@ if(!validateAge){
     )
   );
 
+
+
   //Estrategia Login
   passport.use("login", new LocalStrategy({usernameField:'email'},async(username,password,done)=>{
+    let user = await userRepository.getOneUsers({email:username})
     try{
-        const user = await userModel.findOne({email:username})
         if(!user){
             console.log("El usuario no existe")
             return done (null,false,{message:"El usuario no existe"})
         }
-        if(!isValidPassword(password,user.password))return done(null,false, {message:"Credenciales inválidas"});
+    if(!isValidPassword(password,user.password))return done(null,false, {message:"Credenciales inválidas"});
         return done(null,user)
     }
     catch(error){
@@ -113,7 +121,7 @@ if(!validateAge){
   },async(accessToken,refreshToken,profile,done)=>{
     try{
       console.log(profile._json)
-      let user = await userModel.findOne({email:profile._json.email})
+      let user = await userRepository.getOneUsers({email:profile._json.email})
       if(!user){
         let newUser ={
           first_name: profile._json.login,
@@ -121,9 +129,9 @@ if(!validateAge){
           age: 18,
           email: profile._json.email,
           password: "",
-          cart: await cartManager.create()
+          cart: await cartRepository.createCarts()
         }
-        let result = await userModel.create(newUser);
+        let result = await userRepository.create(newUser);
         done(null,result);
       }
       else{
@@ -142,7 +150,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    let user = await userModel.findById(id);
+    let user = await userRepository.getIdUsers(id);
     done(null, user);
   } catch (err) {
     done(err, null);

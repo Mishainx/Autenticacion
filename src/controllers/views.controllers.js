@@ -1,14 +1,23 @@
-import {productModel} from "../dao/mongo/models/products.model.js"
-import cartModel from "../dao/mongo/models/carts.model.js"
-import userModel from "../dao/mongo/models/user.model.js";
+import { Products } from "../dao/persistence.js";
+import ProductRepository from "../repository/product.repository.js";
 export let assignedCart;
 const messages = []
-
+let products = new Products()
+let productRepository = new ProductRepository(products)
+import { Users } from "../dao/persistence.js";
+import UserRepository from "../repository/user.repository.js";
+let users = new Users()
+let userRepository = new UserRepository(users)
+import { Carts } from "../dao/persistence.js";
+const carts = new Carts()
+import CartRepository from "../repository/cart.repository.js";
+import { checkRole } from "../config/utils.js";
+const cartRepository = new CartRepository(carts)
 
 const getHome = async (req,res)=>{
     try{
         let cartDirection = req.user.cart
-        const productsList = await productModel.find().lean()
+        const productsList = await productRepository.getProducts()
         res.status(200).render('home',{styleSheets:'css/styles',productsList, cartDirection})
     }
     catch(err){
@@ -18,8 +27,9 @@ const getHome = async (req,res)=>{
 
 const getRealTimeProducts = async (req,res)=>{
     try{
+      console.log(req.session.user)
       let cartDirection = req.user.cart
-        const productsList = await productModel.find().lean()
+        const productsList = await productRepository.getProducts()
         res.status(200).render('realTimeProducts',{styleSheets:'css/styles',productsList, cartDirection})
     }
     catch(err){
@@ -29,7 +39,7 @@ const getRealTimeProducts = async (req,res)=>{
 
 const getProducts = async (req,res)=>{
     try{
-      let findUser = await userModel.findOne({email:req.session.user.email})
+      let findUser = await userRepository.getOneUsers({email:req.session.user.email})
       let user ={
         email: req.session.user.email,
         role: findUser.role,
@@ -78,7 +88,7 @@ const getProducts = async (req,res)=>{
     
             //Validación en caso de que se haya ingresado query por categoría
             if(category!=undefined){
-              const checkCategory = await productModel.exists({category:category})
+              const checkCategory = await productRepository.propProducts({category:category})
               if(!checkCategory){
                 res.status(400).send({status:"Error",payload:"La categoría ingresada es inexistente"})
                 return
@@ -87,7 +97,7 @@ const getProducts = async (req,res)=>{
             }
     
         // Se realiza la paginación conforme los querys seleccionados
-        let productList = await productModel.paginate({...category,...stockQuery},{lean:true, limit:limit, page:page, sort: {price:sort}})
+        let productList = await productRepository.getPaginateProducts(category,stockQuery,limit,page,sort)
         let actualUrl = req.originalUrl
         let actualUrlParams = new URLSearchParams(req.originalUrl)
         let nextLink;
@@ -126,7 +136,6 @@ const getProducts = async (req,res)=>{
           productList.nextLink = nextLink
         }
 
-
         //Configuración prevLink
         if(actualUrlParams.has("/api/views/products?page")){
           let newPage = actualUrlParams.get("/api/views/products?page")
@@ -159,11 +168,12 @@ const getProducts = async (req,res)=>{
 }
 
 const getChat = async(req,res)=>{
-    let cartDirection = await assignedCart._id
+    let cartDirection = await assignedCart
     res.status(200).render('chat',{title:"Chat",styleSheets:'css/styles',cartDirection})
 }
 
 const getCartsId = async (req,res)=>{
+    req.session.user = req.user
     let cartDirection = req.user.cart
     const cartId = req.params.cid
     let cart;
@@ -176,7 +186,7 @@ const getCartsId = async (req,res)=>{
       }
   
       //Comprobación de la existencia de un carrito con el parámetro ingresado.
-      const cartExist = await cartModel.findById(cartId).lean().populate("products.product")
+      const cartExist = await cartRepository.getIdCarts(cartId) //await cartModel.findById(cartId).lean().populate("products.product")
       if(cartExist==null){
         let message = "No existe un carrito con la Id seleccionada"
         res.status(400).render('carts_Id',{title:"Cart Id",styleSheets:'css/styles', message})

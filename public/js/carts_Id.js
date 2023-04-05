@@ -9,6 +9,7 @@ let profileNavLink = document.getElementById("profileNavLink")
 let btnsTrash = document.querySelectorAll(".btnTrash")
 let father;
 let cartContainer = document.getElementById("cartContainer")
+let purchaseButton = document.getElementById("purchaseButton")
 
 //Configuración Navbar
 homeNavLink.href = "/"
@@ -30,10 +31,73 @@ for(let btn of btnsTrash){
     father.remove()
 }
 
-socket.on("emptyCart", async (data)=>{
+socket.once("emptyCart", async (data)=>{
     let emptyP= document.createElement("p")
     emptyP.innerText =  `${data}`
     emptyP.style.textAlign = "center" 
     cartContainer.appendChild(emptyP)
-    console.log("hola")
+    purchaseButton.style.display = "none"
 })
+
+
+let buy = async()=>{
+    fetch("/current", {
+        method: "GET",
+        headers: {
+        "Content-Type": "application/json",
+      }})
+    .then((response)=>response.json())
+    .then((data)=>{
+        fetch( `/api/carts/${data.cart}/purchase `, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user: data.user,
+              cart: data.cart
+            }),
+          })
+            .then((res) => res.json())
+            .then((data) =>  {
+                cartContainer.innerHTML = ""
+                
+                let buyMessage = document.createElement("p")
+                buyMessage.innerText = "Su compra se ha realizado con éxito"
+                buyMessage.classList.add("buyP")
+
+                let buyCode = document.createElement("p")
+                buyCode.innerText = `Código de compra: ${data.payload.code}`
+                buyCode.classList.add("buyP")
+
+                let buyPurcharser = document.createElement("p")
+                buyPurcharser.innerText = `Usuario: ${data.payload.purcharser}`
+                buyPurcharser.classList.add("buyP")
+
+                let buyDate = document.createElement("p")
+                buyDate.innerText = `Fecha: ${data.payload.purchase_datetime}`
+                buyDate.classList.add("buyP")
+
+                let buyAmount = document.createElement("p")
+                buyAmount.innerText = `Total de la compra: $ ${data.payload.amount}`
+                buyAmount.classList.add("buyP")
+
+                let backButton = document.createElement("button")
+                backButton.innerText = "Volver al inicio"
+                backButton.id = "backButton"
+
+                cartContainer.append(buyMessage,buyCode,buyPurcharser,buyDate,buyAmount,backButton)
+
+                backButton.addEventListener("click",()=>{
+                    location.href="/api/views/products"
+                })
+
+            })
+    } )
+    
+
+
+    
+}
+
+purchaseButton.addEventListener("click", buy)

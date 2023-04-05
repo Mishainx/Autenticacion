@@ -4,6 +4,8 @@ import { auth } from "../config/utils.js";
 import passport from "passport";
 import { isLog } from "../config/utils.js";
 import { getCurrent, getFailLogin, getFailRegister, getGitHub, getGitHubCallback, getLogin, getLogout, getNoFound, getProfile, getSignUp, postLogin, postSignUp } from "../controllers/root.controllers.js";
+import { checkRole } from "../config/utils.js";
+
 
 // La ruta /login (get) renderiza la vista login a partir de la cual es posible iniciar la sesión al usuario
 rootRouter.get("/login",isLog, getLogin)

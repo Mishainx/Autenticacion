@@ -10,5 +10,6 @@ export default{
     CLIENT_ID_GITHUB: process.env.CLIENT_ID_GITHUB,
     CLIENT_SECRET_GITHUB: process.env.CLIENT_SECRET_GITHUB,
     CALLBACK_URL_GITHUB: process.env.CALLBACK_URL_GITHUB,
-    MONGO_CLUSTER : process.env.MONGO_CLUSTER
+    MONGO_CLUSTER : process.env.MONGO_CLUSTER,
+    PERSISTENCE: process.argv[2]? process.argv[2] : "MONGO"
 }

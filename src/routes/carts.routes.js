@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { addItemToCart, cartUpdate, cartUpdateProduct, createCart, deleteCartId, deleteItemFromCart, getCartId, getCarts } from "../controllers/carts.controllers.js";
+import { addItemToCart, cartUpdateArray, cartUpdateProduct, createCart, deleteCartId, deleteItemFromCart, getCartId, getCarts, purchase } from "../controllers/carts.controllers.js";
+import { auth } from "../config/utils.js";
 
 const router = Router();
 
@@ -23,9 +24,13 @@ router.post("/:cid/products/:pid", addItemToCart);
 router.delete("/:cid/products/:pid", deleteItemFromCart );
 
 //La ruta api/carts/:cid/products/:pid (método put) actualiza el carrito con un array.
-router.put("/:cid", cartUpdate)
+router.put("/:cid", cartUpdateArray)
 
 //La ruta api/carts/:cid/products/:pid (método put) actualiza la cantidad de ejemplares de un producto por parámetro
 router.put("/:cid/products/:pid", cartUpdateProduct)
+
+router.post("/:cid/purchase",purchase)
+
+
 
 export default router;

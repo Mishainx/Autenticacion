@@ -23,31 +23,8 @@ elementExists("send") &&
       }),
     })
       .then((res) => res.json())
-        .then((data) => {
-        if (data.message == "success") {
-          window.location.href = "/api/views/products"
-        }
-        else if(data.status == "error"){
-          console.log(data)
-          loginError.innerHTML = ""
-          let loginErrorP = document.createElement("p")
-          loginErrorP.innerText = data.message == "Missing credentials"? "Ingrese usuario y contraseña" : data.message
-          loginErrorP.style.color="rgb(188, 36, 36)"
-          loginErrorP.style.fontSize = "15px"
-          loginErrorP.style.textAlign = "center"
-          loginError.append(loginErrorP)
-
-        }
-        else {
-          loginError.innerHTML = ""
-          let loginErrorP = document.createElement("p")
-          loginErrorP.innerText = "Usuario no encontrado"
-          loginErrorP.style.color="rgb(188, 36, 36)"
-          loginErrorP.style.fontSize = "15px"
-          loginErrorP.style.textAlign = "center"
-          loginError.append(loginErrorP)
-
-        }
+      .then((data) => {
+        console.log(data)
       })
       .catch((error) => alert("usuario no encontrado"))
       .catch((error) => alert("usuario no encontrado"));

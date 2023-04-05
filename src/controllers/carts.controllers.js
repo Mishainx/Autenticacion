@@ -1,12 +1,16 @@
-import { CartManager } from "../dao/mongo/DBManager.js";
-import { productModel } from "../dao/mongo/models/products.model.js";
-import cartModel from "../dao/mongo/models/carts.model.js";
-const cartManager = new CartManager();
+import { Products } from "../dao/persistence.js";
+import ProductRepository from "../repository/product.repository.js";
+const products = new Products()
+import { Carts } from "../dao/persistence.js";
+const carts = new Carts()
+import CartRepository from "../repository/cart.repository.js";
+const productRepository = new ProductRepository(products)
+const cartRepository = new CartRepository(carts)
 let response;
 
 const getCarts = async (req, res) => {
     try {
-      const cart = await cartManager.read();
+      const cart = await cartRepository.getCarts();
       res.send(cart);
     } catch (err) {
       res.status(500).send(err.message);
@@ -16,7 +20,7 @@ const getCarts = async (req, res) => {
 const getCartId = async (req, res) => {
     try {
       const cartId = req.params.cid
-      const cart = await cartManager.read();
+      const cart = await cartRepository.getCarts();
   
       //Comprobación de la estructura del parámetro Id recibido
       if(cartId.trim().length!=24){ 
@@ -25,14 +29,14 @@ const getCartId = async (req, res) => {
       }
   
       //Comprobación de la existencia de un carrito con el parámetro ingresado.
-      const cartExist = await cartModel.findById(cartId)
+      const cartExist = await cartRepository.getIdCarts(cartId)
       if(cartExist==null){
         res.status(404).send({error:"No existe un Cart con la Id ingresada"})
         return
       }
   
       //Si se comprueba el parámetro se ejecutan las acciones para devolver el carrito solicitado.
-      const findCart = await cartModel.findOne({_id:cartId}).populate('products.product')
+      const findCart = await cartRepository.getIdCarts(cartId)
       if(findCart !=undefined){
       res.status(200).send(findCart)
       return findCart
@@ -47,7 +51,7 @@ const getCartId = async (req, res) => {
 
 const createCart = async (req, res) => {
     try {
-      const response = await cartManager.create();
+      const response = await cartRepository.createCarts();
       res.status(200).send({ message: "Carrito creado", response });
     } catch (err) {
       res.status(500).send(err.message);
@@ -65,18 +69,14 @@ const deleteCartId = async (req, res) => {
       }
   
       //Comprobación de la existencia de un carrito con el parámetro ingresado.
-      const cartExist = await cartModel.findById(id)
+      const cartExist = await cartRepository.getIdCarts(id)
       if(cartExist==null){
         res.status(404).send({error:"No existe un Cart con la Id ingresada"})
         return
       }
   
       //Si se comprueba la validez del parámetro se ejecutan las acciones para eliminar el carrito.
-      let productsInCart = await cartModel.findById(id)
-      productsInCart.products = []
-      productsInCart.save()
-      response = productsInCart
-  
+      let newCart = await cartRepository.deleteAllCarts(id)
       res.status(200).send({ status: "succes", message: 'Productos del carrito eliminados exitósamente', payload: response});
     } catch (err) {
       res.status(500).send(err.message);
@@ -98,8 +98,8 @@ const addItemToCart = async (req, res) => {
       res.status(404).send({error: "La Id del Cart ingresada no es válida"})
       return
     }
-    const productExist = await productModel.findById(productId)
-    const cartExist = await cartModel.findById(cartId)
+    const productExist = await productRepository.getIdProducts(productId)
+    const cartExist = await cartRepository.getIdCarts(cartId)
   
     if(productExist==null){
       res.status(400).send({error:"No existe un producto con la Id ingresada"})
@@ -119,23 +119,10 @@ const addItemToCart = async (req, res) => {
   
     //Si se comprueba la validez de los parámetros se ejecutan las acciones para agregar el producto al carrito
     try {
-      let selectedCart = await cartModel.find({_id: cartId})
-      let productExistInCart = selectedCart[0].products.find((product)=>product.product == productId)
-  
-      if(productExistInCart == undefined){
-        selectedCart[0].products.push({product: productId, quantity: quantity})
-      }
-      else{
-        let newQuantity = productExistInCart.quantity + quantity
-        let productIndex = selectedCart[0].products.findIndex((product)=> product.product == productId)
-        selectedCart[0].products[productIndex].quantity = newQuantity
-      }
-  
-      let result = await cartModel.updateOne({_id:cartId,},selectedCart[0])
-  
-  
-      res.status(200).send({ message: "Producto agregado al carrito", selectedCart });
-    } catch (err) {
+      let result = cartRepository.addItemCarts(cartId,productId,quantity)
+      res.status(200).send({status:"success",message: "Producto agregado exitosamente al carrito", payload: result})  
+    }
+     catch (err) {
       res.status(500).send(err.message);
     }
 }
@@ -156,8 +143,8 @@ const deleteItemFromCart = async (req, res) => {
     }
   
   
-    const productExist = await productModel.findById(productId)
-    const cartExist = await cartModel.findById(cartId)
+    const productExist = await productRepository.getIdProducts(productId)
+    const cartExist = await cartRepository.getIdCarts(cartId)
   
     if(productExist==null){
       res.status(400).send({error:"No existe un producto con la Id ingresada"})
@@ -169,14 +156,14 @@ const deleteItemFromCart = async (req, res) => {
     }
   
       // Comprobación de que el producto exista en el carrito
-      let productExistInCart = cartExist.products.find((product)=>product.product == productId)
+      let productExistInCart = cartExist.products.find((product)=>product.product._id == productId)
       if(productExistInCart == undefined){
       res.status(400).send({error:"No existe un producto en el carrito con la Id ingresada"})
       return
     }
   
     //Si se comprueba la validez de los parámetros se ejecutan las acciones para eliminar el producto al carrito
-      const response = await cartManager.deleteCartProduct(cartId, productId);
+      const response = await cartRepository.deleteProductCarts(cartId,productId);
       res.status(200).send({ message: "Producto eliminado del carrito", response });
     } catch (err) {
       res.status(500).send(err.message);
@@ -185,9 +172,7 @@ const deleteItemFromCart = async (req, res) => {
 
 const cartUpdate = async(req,res)=>{
     const  cartId  = req.params.cid;
-    let newArray = await req.body
-    console.log(newArray.products)
-    
+    let newArray = await req.body    
   
     try {
     //Comprobación de la estructura y validez de la Id del carrito recibida por parámetro
@@ -195,7 +180,7 @@ const cartUpdate = async(req,res)=>{
       res.status(400).send({error: "La Id del Cart ingresada no es válida"})
       return
     }
-    const cartExist = await cartModel.findById(cartId)
+    const cartExist = await cartRepository.getIdCarts(cartId)
   
     if(cartExist==null){
       res.status(400).send({error:"No existe un Cart con la Id ingresada"})
@@ -203,13 +188,39 @@ const cartUpdate = async(req,res)=>{
     }
   
     //Si se comprueba la validez de los parámetros se ejecutan las acciones para actualizar el carrito
-    await cartModel.findByIdAndUpdate({_id:cartId},{products:newArray.products})
-    let response = await cartModel.findById(cartId)
+    // await cartModel.findByIdAndUpdate({_id:cartId},{products:newArray.products})
+    await cartRepository.updateCarts()
+    let response = await cartRepository.getIdCarts(cartId)
     res.status(200).send({status:'success', message:'El carrito se ha actualizado exitósamente', payload:response})
     }
     catch(err){
       res.status(500).send(err.message);
     }
+}
+
+const cartUpdateArray = async(req,res)=>{
+  const  cartId  = req.params.cid;
+  let newArray = await req.body
+
+
+  if(cartId.trim().length!=24){
+    res.status(400).send({error: "La Id del Cart ingresada no es válida"})
+    return
+  }
+  const cartExist = await cartRepository.getIdCarts(cartId)
+
+  if(cartExist==null){
+    res.status(400).send({error:"No existe un Cart con la Id ingresada"})
+    return
+  }
+
+  try{
+    let result = await cartRepository.updateArrayCarts(cartId,newArray)
+    res.status(200).send({status:"success",message:"Carrito actualizado", payload:result})
+  }
+  catch(err){
+    res.status(500).send(err.message);
+  }
 }
 
 const cartUpdateProduct =  async(req,res)=>{
@@ -227,8 +238,8 @@ const cartUpdateProduct =  async(req,res)=>{
       res.status(400).send({error: "La Id del Cart ingresada no es válida"})
       return
     }
-    const productExist = await productModel.findById(productId)
-    const cartExist = await cartModel.findById(cartId)
+    const productExist = await productRepository.getIdProducts(productId)
+    const cartExist = await cartRepository.getIdCarts(cartId)
   
     if(productExist==null){
       res.status(400).send({error:"No existe un producto con la Id ingresada"})
@@ -240,24 +251,30 @@ const cartUpdateProduct =  async(req,res)=>{
     }
   
     // Comprobación de que el producto exista en el carrito
-    let productExistInCart = cartExist.products.find((product)=>product.product == productId)
+    let productExistInCart = cartExist.products.find((product)=>product.product._id == productId)
     if(productExistInCart == undefined){
     res.status(400).send({error:"No existe un producto en el carrito con la Id ingresada"})
     return
   }
   
-  
     //Si se comprueba la validez de los parámetros se ejecutan las acciones para actualizar product quantity
-    let productFindIndex = cartExist.products.findIndex((product)=>product.product == productId)
-    cartExist.products[productFindIndex].quantity = newQuantity.quantity  
-    await cartModel.updateOne({_id: cartId},cartExist)
-  
+    await cartRepository.updateQuantityCarts(cartId,productId,newQuantity)
     response = cartExist
     res.status(200).send({status:'success', message:'El producto se ha actualizado exitósamente', payload:response})
     }
     catch(err){
       res.status(500).send(err.message);
     }
+}
+
+const purchase = async (req, res) => {
+  try {
+    let buyData = req.body
+    let ticket = await cartRepository.purchaseCarts(buyData)
+    res.json({status:"success", message:"Compra finalizada con éxito", payload:ticket})//purchase);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 }
 
 export{
@@ -268,5 +285,7 @@ export{
     addItemToCart,
     deleteItemFromCart,
     cartUpdate,
-    cartUpdateProduct
+    cartUpdateProduct,
+    cartUpdateArray,
+    purchase
 }

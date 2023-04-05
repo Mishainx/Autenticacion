@@ -1,5 +1,10 @@
 let noNav = true
-import userModel from "../dao/mongo/models/user.model.js";
+import { Users } from "../dao/persistence.js";
+import UserRepository from "../repository/user.repository.js";
+let users = new Users()
+let userRepository = new UserRepository(users)
+import CurrentDTO from "../dto/current.dto.js";
+export let assignedCart
 
 const getLogin = async (req,res)=>{
     try{
@@ -21,7 +26,9 @@ const postLogin = async(req,res)=>{
       role: req.user.role
     }
     let response = req.session.user
-    res.json({message:"success", data: response})
+    assignedCart = req.session.user.cart
+    console.log(response.role)
+    res.cookie("coderCookie", req.session.user).json({message:"success", data: response})
 }
 
 const getSignUp = async (req,res)=>{
@@ -47,8 +54,7 @@ const getGitHubCallback = async(req,res)=>{
 
 const getProfile = async (req,res)=>{
     try{
-  
-      let findUser = await userModel.findOne({email:req.session.user.email})
+      let findUser = await userRepository.getOneUsers({email:req.session.user.email})
       let user ={
         email: req.session.user.email,
         role: findUser.role,
@@ -65,7 +71,13 @@ const getProfile = async (req,res)=>{
 }
 
 const getCurrent = async(req,res)=>{
-    res.send(req.session.user)
+    let user = new CurrentDTO(req.session.user)
+    if(user){
+        return   res.send(user)
+    }
+    else{
+        res.status(401).send({status:"error", message: "No hay una sesión iniciada"})
+    }
 }
 
 const getLogout = async (req,res)=>{
