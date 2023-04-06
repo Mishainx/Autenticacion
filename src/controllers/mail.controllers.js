@@ -22,7 +22,7 @@ const getMail = async (req,res)=>{
                   <p>Monto: $ ${req.amount}</p>
                   <p>Usuario: ${req.purcharser}</p>
                 </div>`       
-      });
+      })
 }
 
 export{
