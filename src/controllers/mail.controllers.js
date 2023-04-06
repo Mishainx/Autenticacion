@@ -1,25 +1,28 @@
 import nodemailer from "nodemailer"
+import config from "../config/config.js";
 
-const getMail = async (req,res,)=>{
-    let ticket = req.body
+const getMail = async (req,res)=>{
     let transporter = nodemailer.createTransport({
-        service: "gmail",
-        port: 587,
+        service: config.MAIL_SERVICE,
+        port: config.MAIL_PORT,
         auth: {
-          user: "xiaomishain@gmail.com",
-          pass: "efmlkuasnwhazpgq"
+          user: config.MAIL_USER,
+          pass: config.MAIL_PASS
         }
       });
 
       let info = await transporter.sendMail({
-        from: '"Xiao" <xiaomishain@gmail.com>', // direccion de envio
-        to: `${ticket.user}`, // lista de quienes reciben
+        from: `ecommerce <${config.MAIL_USER}>`, // direccion de envio
+        to: `${req.purcharser}`, // lista de quienes reciben
         subject: `Compra`, // Asunto
-        text: "Hello world?", // Texto plano
-        html: `<p>Su compra se ha realizado con éxitoa</p>` // Email html
+        text: "Su compra en ecommerce", // Texto plano
+        html: `<div>
+                  <p>Código de compra: ${req.code}</p>
+                  <p>Fecha: ${req.purchase_datetime}</p>
+                  <p>Monto: $ ${req.amount}</p>
+                  <p>Usuario: ${req.purcharser}</p>
+                </div>`       
       });
-
-    res.send("success")
 }
 
 export{

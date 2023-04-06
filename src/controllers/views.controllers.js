@@ -11,7 +11,6 @@ let userRepository = new UserRepository(users)
 import { Carts } from "../dao/persistence.js";
 const carts = new Carts()
 import CartRepository from "../repository/cart.repository.js";
-import { checkRole } from "../config/utils.js";
 const cartRepository = new CartRepository(carts)
 
 const getHome = async (req,res)=>{

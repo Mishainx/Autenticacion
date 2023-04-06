@@ -24,7 +24,15 @@ elementExists("send") &&
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
+        if(data.message=="success"){
+          if(data.data.role=="User"){
+            window.location.href = "/api/views/products"
+          }
+          else{
+            window.location.href = "/api/views/realtimeproducts"
+
+          }
+        }
       })
       .catch((error) => alert("usuario no encontrado"))
       .catch((error) => alert("usuario no encontrado"));

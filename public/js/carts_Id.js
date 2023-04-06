@@ -63,8 +63,9 @@ let buy = async()=>{
                 cartContainer.innerHTML = ""
                 
                 let buyMessage = document.createElement("p")
-                buyMessage.innerText = "Su compra se ha realizado con éxito"
+                buyMessage.innerText = `Su compra se ha realizado con éxito.\n\n Un email ha sido enviado a su casilla con la información de compra.`
                 buyMessage.classList.add("buyP")
+                buyMessage.style.textAlign = "center"
 
                 let buyCode = document.createElement("p")
                 buyCode.innerText = `Código de compra: ${data.payload.code}`
@@ -91,13 +92,8 @@ let buy = async()=>{
                 backButton.addEventListener("click",()=>{
                     location.href="/api/views/products"
                 })
-
             })
-    } )
-    
-
-
-    
+    } )  
 }
 
 purchaseButton.addEventListener("click", buy)

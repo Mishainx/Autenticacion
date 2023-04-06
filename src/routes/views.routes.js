@@ -1,7 +1,7 @@
 import { Router } from "express";
 const routerViews = Router();
 import { getHome, getRealTimeProducts, getProducts, getCartsId, getChat } from "../controllers/views.controllers.js";
-import { auth, checkRole } from "../config/utils.js";
+import { auth, checkRole } from "../middlewares/middlewares.js";
 
 // RouterViews.get "Home" devuelve una vista  del listado de productos sin socket server
 routerViews.get('/home', auth, getHome)
@@ -15,8 +15,8 @@ routerViews.get('/products',auth,checkRole("User"), getProducts)
 // RouterViews.GET "Chat devuelve una vista  donde funciona el chat conectado a Mongo y socketserver
 routerViews.get("/chat",auth,checkRole("User"), getChat)
 
-routerViews.get("/carts/:cid",auth, getCartsId)
+routerViews.get("/carts/:cid",auth,checkRole("User"), getCartsId)
 
-routerViews.get('/carts',auth)
+routerViews.get('/carts',auth,checkRole("User"))
 
 export default routerViews

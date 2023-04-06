@@ -27,8 +27,7 @@ const postLogin = async(req,res)=>{
     }
     let response = req.session.user
     assignedCart = req.session.user.cart
-    console.log(response.role)
-    res.cookie("coderCookie", req.session.user).json({message:"success", data: response})
+    res.json({message:"success", data: response})
 }
 
 const getSignUp = async (req,res)=>{

@@ -4,6 +4,7 @@ const products = new Products()
 import { Carts } from "../dao/persistence.js";
 const carts = new Carts()
 import CartRepository from "../repository/cart.repository.js";
+import { getMail } from "./mail.controllers.js";
 const productRepository = new ProductRepository(products)
 const cartRepository = new CartRepository(carts)
 let response;
@@ -271,7 +272,8 @@ const purchase = async (req, res) => {
   try {
     let buyData = req.body
     let ticket = await cartRepository.purchaseCarts(buyData)
-    res.json({status:"success", message:"Compra finalizada con éxito", payload:ticket})//purchase);
+    res.json({status:"success", message:"Compra finalizada con éxito", payload:ticket})
+    await getMail(ticket)
   } catch (err) {
     res.status(500).send(err.message);
   }

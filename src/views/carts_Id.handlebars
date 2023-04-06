@@ -1,36 +1,36 @@
-{{#if cart }}
-<div class="cartContainer" id ="cartContainer">
-    <h3>Cart Id: {{cart._id}}</h3>
-    <div class="cartListContainer">
-    {{#each cart.products}}
-    <div class="= itemContainer">
-        <div>
-        <div><p>Id del producto: </p><p>{{this.product._id}}</p></div>
-        <p>Id del producto: {{this.product.description}}</p>
-        <p>Nombre del producto: {{this.product.title}}</p>
-        <p>Precio del producto: {{this.product.price}}</p>
-        <p >Cantidad: {{this.quantity}}</p>
-        </div   >
-        <i class="fa-solid fa-trash btnTrash"></i>
+<div>
+    {{#if cart }}
+    <div class="cartContainer" id ="cartContainer">
+        <h3>Cart Id: {{cart._id}}</h3>
+        <div class="cartListContainer">
+            {{#each cart.products}}
+            <div class="= itemContainer">
+                <div>
+                    <div><p>Id del producto: </p><p>{{this.product._id}}</p></div>
+                    <p>Id del producto: {{this.product.description}}</p>
+                    <p>Nombre del producto: {{this.product.title}}</p>
+                    <p>Precio del producto: {{this.product.price}}</p>
+                    <p >Cantidad: {{this.quantity}}</p>
+                </div>
+                <i class="fa-solid fa-trash btnTrash"></i>
+            </div>
+            {{else}}
+            <div class="noProductsCart">
+                <p>El Cart no cuenta con productos aún</p>        
+            </div>
+            {{/each}}
+            {{#if cart.products }}
+            <button id="purchaseButton">Finalizar compra</button>
+            {{/if}}
+        </div>
     </div>
+
     {{else}}
-    <div class="noProductsCart">
-        <p>El Cart no cuenta con productos aún</p>        
-    </div>
-    {{/each}}
-  
-    </div>
-    <button id="purchaseButton" class="purchaseButton">Finalizar compra</button>
-
-{{else}}
-<div class="cartErrorContainer">
-    <h3>{{message}}</h3>
+        <div class="cartErrorContainer">
+            <h3>{{message}}</h3>
+        </div>
+    {{/if}}
 </div>
-</div>
-
-{{/if}}
-
-
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/carts_Id.js"></script>
