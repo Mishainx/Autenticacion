@@ -1,5 +1,8 @@
 import { Products } from "../dao/persistence.js";
 import ProductRepository from "../repository/product.repository.js";
+import CustomError from "../services/errors/customErrors.js";
+import EErrors from "../services/errors/enum.js";
+import { generateProductsErrorInfo } from "../services/errors/info.js";
 
 let products = new Products()
 let productRepository = new ProductRepository(products)
@@ -162,41 +165,45 @@ const getProduct = async(req,res)=>{
     }
 }
 
-const createProduct = async (req, res) => {
-    const {
-      title,
-      description,
-      code,
-      price,
-      thumbnail,
-      stock,
-      category,
-      status,
-    } = req.body;
-  
-    if (
-      !title ||
-      !description ||
-      !code ||
-      !price ||
-      !thumbnail ||
-      //!stock
-      !category ||
-      !status
-    ) {
-      res.status(400).send({ error: "Faltan datos" });
-      return;
-    }
-  
-    // Comprobación del código de producto para evitar que se repita
-    const codeExist = await productRepository.findCodeProducts(code)
-  
-    if(codeExist){ 
-      res.status(400).send({error: "El código ingresado ya existe"})
-      return
-    }
-  
+const createProduct = async (req, res,next) => {
+ 
     try {
+      const {
+        title,
+        description,
+        code,
+        price,
+        thumbnail,
+        stock,
+        category,
+        status,
+      } = req.body;
+    
+      if (
+        !title ||
+        !description ||
+        !code ||
+        !price ||
+        !thumbnail ||
+        //!stock||
+        !category ||
+        !status
+      ) {        CustomError.createError({
+        name:"Product creation error",
+        cause: generateProductsErrorInfo({title,description,code,price,thumbnail,category,status}),
+        message: "Error trying to create Product",
+        code: EErrors.INVALID_TYPES_ERROR
+      })
+    }
+    
+      // Comprobación del código de producto para evitar que se repita
+      const codeExist = await productRepository.findCodeProducts(code)
+    
+      if(codeExist){ 
+        res.status(400).send({error: "El código ingresado ya existe"})
+        return
+      }
+
       const response = await productRepository.createProducts({
         title,
         description,
@@ -208,8 +215,8 @@ const createProduct = async (req, res) => {
         status,
       });
       res.status(200).send({ message: "Producto creado", response });
-    } catch (err) {
-      res.status(500).send(err.message);
+    } catch (error) {
+        next(error);
     }
 }
 

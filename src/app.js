@@ -30,7 +30,9 @@ const cartRepository = new CartRepository(carts)
 import { Messages } from "./dao/persistence.js";
 const message = new Messages()
 import MessageRepository from "./repository/message.repository.js";
+import mockingRouter from "./routes/mockingProducts.routes.js";
 const messageRepository = new MessageRepository(message)
+import errorHandler from "./middlewares/errors.js";
 
 const PORT = config.PORT ;
 const DB_USER = config.DB_USER;
@@ -175,4 +177,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/mail", mailRouter)
+app.use("/mockingproducts", mockingRouter)
 app.use("/", rootRouter) // Manejo de ruta raíz
+app.use(errorHandler)
+
