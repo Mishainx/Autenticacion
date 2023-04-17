@@ -33,6 +33,9 @@ import MessageRepository from "./repository/message.repository.js";
 import mockingRouter from "./routes/mockingProducts.routes.js";
 const messageRepository = new MessageRepository(message)
 import errorHandler from "./middlewares/errors.js";
+import CustomError from "./services/errors/customErrors.js";
+import EErrors from "./services/errors/enum.js";
+import { generateProductsErrorInfo } from "./services/errors/info.js";
 
 const PORT = config.PORT ;
 const DB_USER = config.DB_USER;
@@ -168,6 +171,21 @@ socketServer.on("connection", async(socket) => {
       }
       await productRepository.updateProducts(deleteProductId,{stock:newQuantity}) 
   });
+
+  socket.on("createCustomError",(data)=>{
+      try{
+        let {title,description,code,price,thumbnail,stock,category,status} = data
+        CustomError.createError({
+          name:"Product creation error",
+          cause: generateProductsErrorInfo({title,description,code,price,thumbnail,stock,category,status}),
+          message: "Error trying to create Product",
+          code: EErrors.INVALID_TYPES_ERROR
+        })
+      }
+    catch(error){
+     console.log(error)
+    }
+    })
 })
 
 //Rutas express

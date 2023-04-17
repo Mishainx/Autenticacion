@@ -166,7 +166,6 @@ const getProduct = async(req,res)=>{
 }
 
 const createProduct = async (req, res,next) => {
- 
     try {
       const {
         title,
@@ -185,12 +184,12 @@ const createProduct = async (req, res,next) => {
         !code ||
         !price ||
         !thumbnail ||
-        //!stock||
+        !stock||
         !category ||
         !status
       ) {        CustomError.createError({
         name:"Product creation error",
-        cause: generateProductsErrorInfo({title,description,code,price,thumbnail,category,status}),
+        cause: generateProductsErrorInfo({title,description,code,price,thumbnail,stock,category,status}),
         message: "Error trying to create Product",
         code: EErrors.INVALID_TYPES_ERROR
       })
@@ -202,6 +201,7 @@ const createProduct = async (req, res,next) => {
       if(codeExist){ 
         res.status(400).send({error: "El código ingresado ya existe"})
         return
+
       }
 
       const response = await productRepository.createProducts({

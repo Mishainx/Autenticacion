@@ -55,6 +55,8 @@ function createItem(){
         const stockValidate = addStockForm.value > 0 && addStockForm != ""
         const categoryValidate = addCategory.value != ""
         const statusValidate = addStatusForm.value == "True" || addStatusForm.value == "False"
+
+
         
         if(titleValidate,descriptionValidate,priceValidate,stockValidate,codeValidate){
             socket.emit("findCode", addCodeForm.value)
@@ -67,9 +69,22 @@ function createItem(){
                 category: addCategory.value,
                 thumbnail: [],
                 status: addStatusForm.value == "True"? true:false
-            }       
+        }     
  }
  else{
+                item={
+                title: addTitleForm.value,
+                description: addDescriptionForm.value,
+                price: addPriceForm.value,
+                stock: addStockForm.value,
+                code: addCodeForm.value,
+                category: addCategory.value,
+                thumbnail: [],
+                status: addStatusForm.value == "True"? true:false
+        }     
+
+    socket.emit("createCustomError",item )
+
     invalidCode.innerHTML=""
         let invalidFormMsg = document.createElement("p")
         invalidFormMsg.innerText = "* Formulario completado incorrrectamente"

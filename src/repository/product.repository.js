@@ -18,8 +18,13 @@ export default class ProductRepository{
     }
 
     createProducts = async(product)=>{
-        let result = await this.dao.create(product)
-        return result
+        try{
+            let result = await this.dao.create(product)
+            return result
+        }
+        catch(error){
+            next(error)
+        }
     }
 
     deleteProducts = async(productId)=>{
