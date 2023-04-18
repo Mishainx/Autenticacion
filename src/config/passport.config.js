@@ -39,7 +39,6 @@ const initializePassport = () => {
 
   //comprobación de campos
   if(!!!first_name || !!!last_name || !!!email || !!!age || !!!password){
-    console.log("todos los campos deben ser completados")
     return done(null,false,{message:"Todos los campos deben ser completados"})
   }
 

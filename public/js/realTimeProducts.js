@@ -47,18 +47,20 @@ function createItem(){
     addBtnForm.addEventListener("click",(Event)=>{
         Event.preventDefault()
         
-        //Variables a validar
-        const titleValidate = addTitleForm.value != ""
-        const descriptionValidate = addDescriptionForm.value != ""
+        console.log(addTitleForm.value)
+        const titleValidate = /^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(addTitleForm.value)
+        const descriptionValidate = addDescriptionForm.value != undefined
         const priceValidate = addPriceForm.value > 0 
-        const codeValidate = addCodeForm.value != "" 
-        const stockValidate = addStockForm.value > 0 && addStockForm != ""
-        const categoryValidate = addCategory.value != ""
+        const codeValidate = addCodeForm.value != undefined
+        const stockValidate = addStockForm.value > 0 && addStockForm != undefined
+        const categoryValidate = addCategory.value != undefined
         const statusValidate = addStatusForm.value == "True" || addStatusForm.value == "False"
+
+        console.log(titleValidate)
 
 
         
-        if(titleValidate,descriptionValidate,priceValidate,stockValidate,codeValidate){
+        if(titleValidate && descriptionValidate&&priceValidate&&stockValidate&&codeValidate&&categoryValidate){
             socket.emit("findCode", addCodeForm.value)
             item={
                 title: addTitleForm.value,
@@ -69,9 +71,9 @@ function createItem(){
                 category: addCategory.value,
                 thumbnail: [],
                 status: addStatusForm.value == "True"? true:false
-        }     
- }
- else{
+            }     
+        }
+        else{
                 item={
                 title: addTitleForm.value,
                 description: addDescriptionForm.value,
@@ -87,7 +89,7 @@ function createItem(){
 
     invalidCode.innerHTML=""
         let invalidFormMsg = document.createElement("p")
-        invalidFormMsg.innerText = "* Formulario completado incorrrectamente"
+        invalidFormMsg.innerText = "* Formulario completado incorrectamente"
         invalidFormMsg.style.color="rgb(188, 36, 36)"
         invalidCode.append(invalidFormMsg)
 }}
@@ -95,7 +97,6 @@ function createItem(){
 
 //Renderización de cambios en el sistema de forma dinámica
 socket.on("renderChanges",(data)=>{
-    console.log(data)
     realTimeProducts.innerHTML = "<h2>Listado de Productos<h2>"
         
             data.forEach(product=>{

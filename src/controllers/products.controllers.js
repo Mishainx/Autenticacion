@@ -240,7 +240,6 @@ const deleteProduct = async (req, res) => {
     //Si se comprueba la Id se ejecutan las acciones para eliminar el producto.
     try {
       const result = await productRepository.deleteProducts(id);
-  
       res.status(200).send({ message: "Producto eliminado", result });
     } catch (err) {
       res.status(500).send(err.message);

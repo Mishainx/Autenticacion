@@ -39,8 +39,13 @@ const getSignUp = async (req,res)=>{
     }
 }
 
-const postSignUp = async(req,res)=>{
+const postSignUp = async(req,res,next)=>{
+    try{
     res.send({status:"success", message:"Usuario registrado exitosamente"})
+    }
+    catch(error){
+        next(error)
+    }
 }
 
 const getGitHub = async(req,res)=>{}

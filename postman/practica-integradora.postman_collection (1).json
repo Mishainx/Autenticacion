@@ -534,6 +534,30 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "mockingProducts",
+			"item": [
+				{
+					"name": "mockingProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/mockingproducts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"mockingproducts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

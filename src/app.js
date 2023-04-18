@@ -103,8 +103,12 @@ app.use((req, res, next)=>{
   next();
 })
 
+
 //Configuración socket server
+
 socketServer.on("connection", async(socket) => {
+
+
 
   socket.on("message", (data) => {
     mensajes.push(data);
@@ -172,21 +176,29 @@ socketServer.on("connection", async(socket) => {
       await productRepository.updateProducts(deleteProductId,{stock:newQuantity}) 
   });
 
+  
+
+
   socket.on("createCustomError",(data)=>{
-      try{
-        let {title,description,code,price,thumbnail,stock,category,status} = data
-        CustomError.createError({
-          name:"Product creation error",
-          cause: generateProductsErrorInfo({title,description,code,price,thumbnail,stock,category,status}),
-          message: "Error trying to create Product",
-          code: EErrors.INVALID_TYPES_ERROR
-        })
-      }
-    catch(error){
-     console.log(error)
+
+    try{
+      let {title,description,code,price,thumbnail,stock,category,status} = data
+      CustomError.createError({
+        name:"Product creation error",
+        cause: generateProductsErrorInfo({title,description,code,price,thumbnail,stock,category,status}),
+        message: "Error trying to create Product",
+        code: EErrors.INVALID_TYPES_ERROR
+      })
     }
-    })
+  catch(error){
+   console.log(error)
+  }
+  });
+    
+
+
 })
+
 
 //Rutas express
 app.use("/messages", messageRoute);
