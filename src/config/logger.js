@@ -3,7 +3,6 @@ import config from "./config.js";
 const ENVIROMENT = config.ENVIROMENT
 let logger;
 
-
 // Customización del logger
     export const customLevelOptions ={
         levels:{
@@ -25,7 +24,9 @@ let logger;
     }
  
     
-// Condicional para determinar la customización según el entorno    
+// Condicional para determinar la customización según el entorno
+// El entorno se determina por cli: "dev" / "prod". Default: desarrollo.
+    
     if(ENVIROMENT === "DEV"){
         console.log("Modo desarrollador")
         logger = winston.createLogger({

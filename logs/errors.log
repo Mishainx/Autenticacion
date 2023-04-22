@@ -34,3 +34,5 @@
 {"level":"fatal","message":"GET en /- 09:30:56 - Probando logger fatal"}
 {"level":"error","message":"GET en /- 09:32:49 - Probando logger error"}
 {"level":"fatal","message":"GET en /- 09:32:49 - Probando logger fatal"}
+{"level":"error","message":"GET en /- 11:00:03 - Probando logger error"}
+{"level":"fatal","message":"GET en /- 11:00:03 - Probando logger fatal"}
