@@ -51,7 +51,7 @@ switch (persistence) {
 
     break;
   case "MEMORY":
-    console.log("hola")
+    console.log("Usando memory")
 /*    const { default: ContactMemory } = await import(
       "./memory/contact.memory.js"
     );

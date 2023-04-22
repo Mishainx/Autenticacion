@@ -20,7 +20,8 @@ const getHome = async (req,res)=>{
         res.status(200).render('home',{styleSheets:'css/styles',productsList, cartDirection})
     }
     catch(err){
-        res.status(500).send({error:err})
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
+      res.status(500).send({error:err})
     }
 }
 
@@ -32,6 +33,7 @@ const getRealTimeProducts = async (req,res)=>{
         res.status(200).render('realTimeProducts',{styleSheets:'css/styles',productsList, cartDirection})
     }
     catch(err){
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto agregado exitosamente`)
         res.status(500).send({error:err})
     }
 }
@@ -162,7 +164,8 @@ const getProducts = async (req,res)=>{
         res.status(200).render('products',{styleSheets:'css/styles', productList,cartDirection,user})
     }
     catch(err){
-        res.status(500).send({error:err})
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
+      res.status(500).send({error:err})
     }
 }
 

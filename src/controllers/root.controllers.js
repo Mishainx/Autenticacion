@@ -27,6 +27,7 @@ const postLogin = async(req,res)=>{
     }
     let response = req.session.user
     assignedCart = req.session.user.cart
+    req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Loggin exitoso`)
     res.json({message:"success", data: response})
 }
 
@@ -35,15 +36,18 @@ const getSignUp = async (req,res)=>{
          res.status(200).render("signup",{title:"signup",styleSheets:'css/styles', noNav })
      }
     catch(err){
+    req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
      throw err
     }
 }
 
 const postSignUp = async(req,res,next)=>{
     try{
+    req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Registro de usuario exitoso`)
     res.send({status:"success", message:"Usuario registrado exitosamente"})
     }
     catch(error){
+        req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
         next(error)
     }
 }
@@ -51,7 +55,7 @@ const postSignUp = async(req,res,next)=>{
 const getGitHub = async(req,res)=>{}
 
 const getGitHubCallback = async(req,res)=>{
-    console.log(req.user)
+    req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Github loggin`)
     req.session.user = req.user;
     res.redirect('/api/views/products')
 }
@@ -70,6 +74,7 @@ const getProfile = async (req,res)=>{
          res.status(200).render("profile",{title:"profile",styleSheets:'css/styles', user })
      }
     catch(err){
+    req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
      throw err
     }
 }
@@ -85,14 +90,21 @@ const getCurrent = async(req,res)=>{
 }
 
 const getLogout = async (req,res)=>{
-    req.session.destroy(err=>{
-      if(err){
-        res.send({status:'error', message:'Error al cerrar la sesión: '+err});
-      }
-      else{
-        res.clearCookie('connect.sid',{ path: '/' }).send({status:"success", message: "Sesión cerrada"})
-      }
-    })
+    try{
+        req.session.destroy(err=>{
+            if(err){
+              res.send({status:'error', message:'Error al cerrar la sesión: '+err});
+            }
+            else{
+              req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Sesión destruida`)
+              res.clearCookie('connect.sid',{ path: '/' }).send({status:"success", message: "Sesión cerrada"})
+            }
+          })
+    }
+    catch(error){
+        req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
+        throw error
+    }
 }
 
 const getFailRegister = async(req,res)=>{
@@ -110,7 +122,13 @@ const getFailLogin = async(req,res)=>{
 }
 
 const getNoFound = async (req,res)=>{
-res.status(301).redirect('/api/views/home')
+    try{
+        res.status(301).redirect('/api/views/home')
+    }
+    catch(error){
+        req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
+        throw error
+    }
 }
 
 export {

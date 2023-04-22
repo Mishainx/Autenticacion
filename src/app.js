@@ -36,6 +36,8 @@ import errorHandler from "./middlewares/errors.js";
 import CustomError from "./services/errors/customErrors.js";
 import EErrors from "./services/errors/enum.js";
 import { generateProductsErrorInfo } from "./services/errors/info.js";
+import { addLogger } from "./config/logger.js";
+import loggerTestRouter from "./routes/logger.routes.js";
 
 const PORT = config.PORT ;
 const DB_USER = config.DB_USER;
@@ -61,6 +63,7 @@ app.use(express.urlencoded({ extended: true }));
 // Cookie parser y connect-flash
 app.use(cookieParser("coderSecret"));
 app.use(flash())
+app.use(addLogger)
 
 //Mongo store para crear sesiones
 app.use(session({
@@ -199,7 +202,6 @@ socketServer.on("connection", async(socket) => {
 
 })
 
-
 //Rutas express
 app.use("/messages", messageRoute);
 app.use('/api/views', routerViews)
@@ -208,6 +210,8 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/mail", mailRouter)
 app.use("/mockingproducts", mockingRouter)
+app.use("/loggerTest", loggerTestRouter)
+
 app.use("/", rootRouter) // Manejo de ruta raíz
 app.use(errorHandler)
 

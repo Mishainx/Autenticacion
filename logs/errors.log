@@ -1,0 +1,36 @@
+
+{"level":"error","message":"GET en /- 08:27:58"}
+{"level":"error","message":"GET en /- 08:27:58"}
+{"level":"error","message":"GET en /- 08:30:04"}
+{"level":"error","message":"GET en /- 08:30:43"}
+{"level":"error","message":"GET en /- 08:31:13"}
+{"level":"error","message":"GET en /- 08:31:51"}
+{"level":"error","message":"GET en /- 08:31:51"}
+{"level":"error","message":"GET en /- 08:32:11"}
+{"level":"error","message":"Probando  logger error"}
+{"level":"error","message":"GET en /- 08:33:57"}
+{"level":"error","message":"Probando  logger error"}
+{"level":"error","message":"GET en /- 08:33:58"}
+{"level":"error","message":"Probando  logger error"}
+{"level":"error","message":"GET en /- 08:55:16"}
+{"level":"error","message":"GET en /- 08:56:00"}
+{"level":"error","message":"GET en /- 08:56:05"}
+{"level":"error","message":"GET en /- 08:57:06"}
+{"level":"error","message":"GET en /- 09:03:54"}
+{"level":"error","message":"GET en /- 09:04:03"}
+{"level":"error","message":"GET en /- 09:04:15"}
+{"level":"error","message":"GET en /- 09:04:23"}
+{"level":"error","message":"GET en /- 09:04:37"}
+{"level":"error","message":"GET en /- 09:04:39"}
+{"level":"error","message":"Probando  logger error"}
+{"level":"fatal","message":"Probando  logger fatal"}
+{"level":"error","message":"Probando  logger error"}
+{"level":"fatal","message":"Probando  logger fatal"}
+{"level":"error","message":"Probando  logger error"}
+{"level":"fatal","message":"Probando  logger fatal"}
+{"level":"error","message":"Probando  logger error"}
+{"level":"fatal","message":"Probando  logger fatal"}
+{"level":"error","message":"GET en /- 09:30:56 - Probando logger error"}
+{"level":"fatal","message":"GET en /- 09:30:56 - Probando logger fatal"}
+{"level":"error","message":"GET en /- 09:32:49 - Probando logger error"}
+{"level":"fatal","message":"GET en /- 09:32:49 - Probando logger fatal"}

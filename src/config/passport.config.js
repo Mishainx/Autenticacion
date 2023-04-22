@@ -88,6 +88,7 @@ if(!validateAge){
           let result = await userRepository.create(newUser);
           return done(null, result);
         } catch (err) {
+          req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al registrar el usuario`)
           return done("Error al registrar el usuario", false);
         }
       }
@@ -108,7 +109,8 @@ if(!validateAge){
         return done(null,user)
     }
     catch(error){
-        return done(error)
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al loguear el usuario`)
+      return done(error)
     }
   }))
 
@@ -138,6 +140,7 @@ if(!validateAge){
       }
     }
     catch(error){
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
       return done(error);
     }
   }))
@@ -152,6 +155,7 @@ passport.deserializeUser(async (id, done) => {
     let user = await userRepository.getIdUsers(id);
     done(null, user);
   } catch (err) {
+    req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al deserializar`)
     done(err, null);
   }
 });

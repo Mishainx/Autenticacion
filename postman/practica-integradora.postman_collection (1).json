@@ -558,6 +558,30 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "loggerTest",
+			"item": [
+				{
+					"name": "loggerTest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/loggerTest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"loggerTest"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

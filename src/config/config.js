@@ -15,5 +15,6 @@ export default{
     MAIL_USER: process.env.MAIL_USER,
     MAIL_PASS: process.env.MAIL_PASS,
     MAIL_PORT: process.env.MAIL_PORT,
-    PERSISTENCE: process.argv[2]? process.argv[2] : "MONGO"
+    PERSISTENCE: process.argv.includes("memory")? "MEMORY" : "MONGO",
+    ENVIROMENT: process.argv.includes("prod")? "PROD" : "DEV"
 }

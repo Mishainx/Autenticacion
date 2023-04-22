@@ -14,6 +14,7 @@ const getCarts = async (req, res) => {
       const cart = await cartRepository.getCarts();
       res.send(cart);
     } catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
       res.status(500).send(err.message);
     }
 }
@@ -55,6 +56,7 @@ const createCart = async (req, res) => {
       const response = await cartRepository.createCarts();
       res.status(200).send({ message: "Carrito creado", response });
     } catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
       res.status(500).send(err.message);
     }
 }
@@ -78,8 +80,10 @@ const deleteCartId = async (req, res) => {
   
       //Si se comprueba la validez del parámetro se ejecutan las acciones para eliminar el carrito.
       let newCart = await cartRepository.deleteAllCarts(id)
+      req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Cart ${id} eliminado exitosamente`)
       res.status(200).send({ status: "succes", message: 'Productos del carrito eliminados exitósamente', payload: response});
     } catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
       res.status(500).send(err.message);
     }
 }
@@ -114,6 +118,7 @@ const addItemToCart = async (req, res) => {
     //Comprobación de stock
     let checkStock = productExist.stock
     if(parseInt(quantity)>checkStock){
+      req.logger.warning(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Stock insuficiente`)
       res.status(400).send({status:"Error", message:"No hay stock suficiente para la cantidad solicitada"})
     return
     }
@@ -121,9 +126,11 @@ const addItemToCart = async (req, res) => {
     //Si se comprueba la validez de los parámetros se ejecutan las acciones para agregar el producto al carrito
     try {
       let result = cartRepository.addItemCarts(cartId,productId,quantity)
+      req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto agregado exitosamente`)
       res.status(200).send({status:"success",message: "Producto agregado exitosamente al carrito", payload: result})  
     }
      catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al agregar el producto al carrito`)
       res.status(500).send(err.message);
     }
 }
@@ -167,6 +174,7 @@ const deleteItemFromCart = async (req, res) => {
       const response = await cartRepository.deleteProductCarts(cartId,productId);
       res.status(200).send({ message: "Producto eliminado del carrito", response });
     } catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al elimnar el producto del cart`)
       res.status(500).send(err.message);
     }
 }
@@ -195,6 +203,7 @@ const cartUpdate = async(req,res)=>{
     res.status(200).send({status:'success', message:'El carrito se ha actualizado exitósamente', payload:response})
     }
     catch(err){
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
       res.status(500).send(err.message);
     }
 }
@@ -217,9 +226,11 @@ const cartUpdateArray = async(req,res)=>{
 
   try{
     let result = await cartRepository.updateArrayCarts(cartId,newArray)
+    req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Carrito actualizado`)
     res.status(200).send({status:"success",message:"Carrito actualizado", payload:result})
   }
   catch(err){
+    req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
     res.status(500).send(err.message);
   }
 }
@@ -264,6 +275,7 @@ const cartUpdateProduct =  async(req,res)=>{
     res.status(200).send({status:'success', message:'El producto se ha actualizado exitósamente', payload:response})
     }
     catch(err){
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
       res.status(500).send(err.message);
     }
 }
@@ -275,6 +287,7 @@ const purchase = async (req, res) => {
     res.json({status:"success", message:"Compra finalizada con éxito", payload:ticket})
     await getMail(ticket)
   } catch (err) {
+    req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
     res.status(500).send(err.message);
   }
 }

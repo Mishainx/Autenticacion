@@ -67,7 +67,6 @@ const getProducts = async (req, res) => {
         if(actualUrlParams.has("/api/products")){
           let actualUrl = new URLSearchParams(req.originalUrl)
           actualUrl.set('/api/products',2)
-          
           nextLink = actualUrl.toString().replace("%2Fapi%2Fproducts=", "/api/products?page=")
         }
   
@@ -133,6 +132,7 @@ const getProducts = async (req, res) => {
     }
   
     catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
       res.status(500).send(err.message);
     }
 }
@@ -161,6 +161,7 @@ const getProduct = async(req,res)=>{
       res.status(200).send({status:"success",payload:result})
     }
     catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al enviar el producto ${id}`)
       res.status(500).send(err.message);
     }
 }
@@ -214,9 +215,12 @@ const createProduct = async (req, res,next) => {
         category,
         status,
       });
+
+      req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto creado exitosamente`)
       res.status(200).send({ message: "Producto creado", response });
     } catch (error) {
-        next(error);
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al crear el producto`)
+      next(error);
     }
 }
 
@@ -240,8 +244,10 @@ const deleteProduct = async (req, res) => {
     //Si se comprueba la Id se ejecutan las acciones para eliminar el producto.
     try {
       const result = await productRepository.deleteProducts(id);
+      req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto id: ${id} eliminado exitosamente`)
       res.status(200).send({ message: "Producto eliminado", result });
     } catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al eliminar el producto`)
       res.status(500).send(err.message);
     }
 }
@@ -268,9 +274,11 @@ const updateProduct = async (req, res) => {
     try{
       let newProperty = await productRepository.updateProducts(pid,property)
       const response = await productRepository.getIdProducts(pid)
+      req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto actualizado exitosamente`)
       res.status(200).send({message:"Producto actualizado exitósamente", response})
     }
     catch (err) {
+      req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al actualizar el producto`)
       res.status(500).send(err.message);
     }
 }
