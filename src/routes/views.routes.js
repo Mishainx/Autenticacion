@@ -7,16 +7,16 @@ import { auth, checkRole } from "../middlewares/middlewares.js";
 routerViews.get('/home', auth, getHome)
 
 // RouterViews.GET "Real Time Products" devuelve una vista  del listado de productos que actualiza cambios en vivo con socket server
-routerViews.get('/realTimeProducts',auth,checkRole("Admin"), getRealTimeProducts)
+routerViews.get('/realTimeProducts',auth,checkRole(["Admin", "Premium"]), getRealTimeProducts)
 
 // RouterViews.GET "Products" devuelve una vista  del listado de productos con paginación
-routerViews.get('/products',auth,checkRole("User"), getProducts)
+routerViews.get('/products',auth,checkRole(["User", "Premium"]), getProducts)
 
 // RouterViews.GET "Chat devuelve una vista  donde funciona el chat conectado a Mongo y socketserver
-routerViews.get("/chat",auth,checkRole("User"), getChat)
+routerViews.get("/chat",auth,checkRole(["User", "Premium"]), getChat)
 
-routerViews.get("/carts/:cid",auth,checkRole("User"), getCartsId)
+routerViews.get("/carts/:cid",auth,checkRole(["User", "Premium"]), getCartsId)
 
-routerViews.get('/carts',auth,checkRole("User"))
+routerViews.get('/carts',auth,checkRole(["User", "Premium"]))
 
 export default routerViews

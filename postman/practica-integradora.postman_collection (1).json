@@ -57,7 +57,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "    { \r\n        \"title\": \"producto once\",\r\n        \"description\": \"Este es el producto once\",\r\n        \"price\": 200,\r\n        \"thumbnail\": [],\r\n        \"code\": \"codigo11\",\r\n        \"stock\": 10,\r\n        \"category\": \"le products\",\r\n        \"status\": true\r\n    }",
+							"raw": "    {   \r\n        \"title\": \"Manzana\",\r\n        \"description\": \"Manzana por KG\",\r\n        \"price\": 400,\r\n        \"thumbnail\": [],\r\n        \"code\": \"codigo1\",\r\n        \"stock\": 10,\r\n        \"category\": \"fruta\",\r\n        \"status\": true\r\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -251,7 +251,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/carts/63e7eb7b4ca25f790d590984/products/63e625ada9a9d4277ce28e7b",
+							"raw": "http://localhost:8080/api/carts/64517d4725e1c03376697f05/products/6453795d34c0ae51ef5029e6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -260,9 +260,9 @@
 							"path": [
 								"api",
 								"carts",
-								"63e7eb7b4ca25f790d590984",
+								"64517d4725e1c03376697f05",
 								"products",
-								"63e625ada9a9d4277ce28e7b"
+								"6453795d34c0ae51ef5029e6"
 							]
 						}
 					},
@@ -576,6 +576,95 @@
 							"port": "8080",
 							"path": [
 								"loggerTest"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ResetPassword",
+			"item": [
+				{
+					"name": "resetpassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"user\":\"fer.r@live.com.ar\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/resetpassword",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"resetpassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "newpassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"password1\":\"asd\",\r\n \"password2\":\"asd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/newpassword/4903686e39de40070106fcc1e898fc0d619071d2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"newpassword",
+								"4903686e39de40070106fcc1e898fc0d619071d2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "upgrade",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/users/premium/64517d4725e1c03376697f07",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"premium",
+								"64517d4725e1c03376697f07"
 							]
 						}
 					},

@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { addItemToCart, cartUpdateArray, cartUpdateProduct, createCart, deleteCartId, deleteItemFromCart, getCartId, getCarts, purchase } from "../controllers/carts.controllers.js";
-import { auth } from "../middlewares/middlewares.js";
-
+import { authPostman,checkRolePostman } from "../middlewares/middlewares.js";
 const router = Router();
 
 // La ruta api/carts (método get) devuelve el listado de carritos creados.
@@ -17,11 +16,10 @@ router.post("/", createCart);
 router.delete("/:id", deleteCartId);
 
 // La ruta api/carts/:cid/products/:pid (método post) agrega un producto a un carrito
-router.post("/:cid/products/:pid", addItemToCart);
+router.post("/:cid/products/:pid",authPostman,checkRolePostman(["User", "Premium"]), addItemToCart);
 
 // La ruta api/carts/:cid/products/:pid (método delete) elimina un producto del carrito solicitado
-
-router.delete("/:cid/products/:pid", deleteItemFromCart );
+router.delete("/:cid/products/:pid", deleteItemFromCart);
 
 //La ruta api/carts/:cid/products/:pid (método put) actualiza el carrito con un array.
 router.put("/:cid", cartUpdateArray)

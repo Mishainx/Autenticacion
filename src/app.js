@@ -1,43 +1,38 @@
+//Express
 import express from "express";
-import mongoose from "mongoose";
-import productsRouter from "./routes/products.routes.js";
-import cartsRouter from "./routes/carts.routes.js";
-import { Server } from "socket.io";
-import { engine } from "express-handlebars";
-import routerViews from "./routes/views.routes.js";
-import messageRoute from "./routes/messages.routes.js";
-const mensajes = []
-import { __dirname } from './config/utils.js';
-import MongoStore from "connect-mongo";
-import cookieParser from "cookie-parser";
 import session from "express-session";
-import sessionsRouter from "./routes/sessions.routes.js";
-import rootRouter from "./routes/root.routes.js";
+//Passport
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-import  {assignedCart}  from "./controllers/root.controllers.js";
+//Mongo
+import MongoStore from "connect-mongo";
+//Socket
+import { Server } from "socket.io";
+import { socketModule } from "./socket/socket.js";
+//Cookie Parser
+import cookieParser from "cookie-parser";
+//Handlebars
+import { engine } from "express-handlebars";
+//Import Routes
+import productsRouter from "./routes/products.routes.js";
+import routerViews from "./routes/views.routes.js";
+import messageRoute from "./routes/messages.routes.js";
+import sessionsRouter from "./routes/sessions.routes.js";
+import rootRouter from "./routes/root.routes.js";
+import mailRouter from "./routes/mail.routes.js";
+import mockingRouter from "./routes/mockingProducts.routes.js";
+import loggerTestRouter from "./routes/logger.routes.js";
+import usersRouter from "./routes/users.routes.js";
+import cartsRouter from "./routes/carts.routes.js";
+//Errors
+import errorHandler from "./middlewares/errors.js";
+
+//Config
 import flash from "connect-flash"
 import config from "./config/config.js";
-import mailRouter from "./routes/mail.routes.js";
-import { Products } from "./dao/persistence.js";
-import ProductRepository from "./repository/product.repository.js";
-const products = new Products()
-import { Carts } from "./dao/persistence.js";
-const carts = new Carts()
-import CartRepository from "./repository/cart.repository.js";
-const productRepository = new ProductRepository(products)
-const cartRepository = new CartRepository(carts)
-import { Messages } from "./dao/persistence.js";
-const message = new Messages()
-import MessageRepository from "./repository/message.repository.js";
-import mockingRouter from "./routes/mockingProducts.routes.js";
-const messageRepository = new MessageRepository(message)
-import errorHandler from "./middlewares/errors.js";
-import CustomError from "./services/errors/customErrors.js";
-import EErrors from "./services/errors/enum.js";
-import { generateProductsErrorInfo } from "./services/errors/info.js";
 import { addLogger } from "./config/logger.js";
-import loggerTestRouter from "./routes/logger.routes.js";
+import { __dirname } from './config/utils.js';
+const mensajes = []
 
 const PORT = config.PORT ;
 const DB_USER = config.DB_USER;
@@ -61,13 +56,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Cookie parser y connect-flash
-app.use(cookieParser("coderSecret"));
+app.use(cookieParser(config.COOKIE_SECRET));
 app.use(flash())
 app.use(addLogger)
 
-//Mongo store para crear sesiones
-app.use(session({
-  secret: "coderhouse",
+//Express sessions middleware
+let sessionMiddleware = session({
+  secret: config.SESSION_SECRET,
   resave: true,
   saveUninitialized: false,
   store: MongoStore.create({
@@ -79,7 +74,12 @@ app.use(session({
     ttl: 1000,
   }),
 })
-);
+app.use(sessionMiddleware);
+
+//MiddleWare para usar el contexto de express sessions en socket
+socketServer.use(function(socket,next){
+  sessionMiddleware(socket.request, socket.request.res, next);
+})
 
 //Configuración passport
 initializePassport();
@@ -92,11 +92,9 @@ app.set('view engine', 'handlebars');
 app.set('views', __dirname+"/src/views")
 app.use(express.static(__dirname +'/public'));
 
-
 app.post("/socketMessage", (req, res) => {
   const { message } = req.body;
   socketServer.emit("message", message);
-
   res.send("ok");
 });
 
@@ -106,112 +104,19 @@ app.use((req, res, next)=>{
   next();
 })
 
-
-//Configuración socket server
-
-socketServer.on("connection", async(socket) => {
-
-
-
-  socket.on("message", (data) => {
-    mensajes.push(data);
-    socketServer.emit("messageLogs", mensajes);
-    messageRepository.CreateMessage(mensajes)  
-  });
-   
-  socket.on("findCode",async(data)=>{
-  socket.emit("findCodeResult", await productRepository.findCodeProducts(data))
-  })
-
-  socket.on("createItem", async(data)=>{
-    productRepository.createProducts(data)
-    socket.emit("renderChanges", await productRepository.getProducts())
-  })
-
-  socket.on("findId",async (data)=>{
-  const productExist = await productRepository.getIdProducts(data)
-  socket.emit("resultFindId", productExist)
-  })
-
-  socket.on("deleteItem",async(data)=>{
-    await productRepository.deleteProducts(data)
-    socket.emit("renderChanges",await productRepository.getProducts())
-  })
-
-   socket.on("sendItem",async (data)=>{
-      try{
-        let selectedCart = await cartRepository.getIdCarts(assignedCart)
-        let productExistInCart = selectedCart.products.find((product)=>product.product._id == data.id)
-        let checkStock = await productRepository.getIdProducts(data.id)
-
-        if(parseInt(data.quantity)>checkStock.stock){
-          let message = "La cantidad solicitada es mayor que el stock disponible"
-          socket.emit("stockError",{error:message, checkStock})
-          return
-        }
-        
-        let result = cartRepository.addItemCarts(assignedCart,data.id,data.quantity)
-        let product = await productRepository.getIdProducts(data.id)
-        let newStock = product.stock-data.quantity
-        await productRepository.updateProducts(data.id,{stock:newStock})
-        let newProduct = await productRepository.getIdProducts(data.id)
-        socket.emit("addSuccess",{status:"succes", result,newProduct})
-      }
-      catch (err) {
-        throw err;
-      }
-    })
-
-    socket.on("deleteCartItem",async(data)=>{
-      let deleteProductId = data
-      let cart = await cartRepository.getIdCarts(assignedCart)
-      let product = await productRepository.getIdProducts(deleteProductId)
-      let productCart = cart.products.find((product)=>product.product._id==deleteProductId)
-
-      await cartRepository.deleteProductCarts(assignedCart,deleteProductId)
-       socket.emit("deleteSuccess", "Producto eliminado exitosamente")
-      let newQuantity = product.stock + productCart.quantity 
-      cart = await cartRepository.getIdCarts(assignedCart)
-      let cartLength = cart.products.length
-      if (cartLength == 0){
-        socket.emit("emptyCart", "El carrito no cuenta con productos aún")
-      }
-      await productRepository.updateProducts(deleteProductId,{stock:newQuantity}) 
-  });
-
-  
-
-
-  socket.on("createCustomError",(data)=>{
-
-    try{
-      let {title,description,code,price,thumbnail,stock,category,status} = data
-      CustomError.createError({
-        name:"Product creation error",
-        cause: generateProductsErrorInfo({title,description,code,price,thumbnail,stock,category,status}),
-        message: "Error trying to create Product",
-        code: EErrors.INVALID_TYPES_ERROR
-      })
-    }
-  catch(error){
-   console.log(error)
-  }
-  });
-    
-
-
-})
+//socket
+socketModule(socketServer)
 
 //Rutas express
 app.use("/messages", messageRoute);
 app.use('/api/views', routerViews)
+app.use("/api/users", usersRouter)
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/mail", mailRouter)
 app.use("/mockingproducts", mockingRouter)
 app.use("/loggerTest", loggerTestRouter)
-
 app.use("/", rootRouter) // Manejo de ruta raíz
 app.use(errorHandler)
 

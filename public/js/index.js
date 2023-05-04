@@ -30,8 +30,16 @@ elementExists("send") &&
           }
           else{
             window.location.href = "/api/views/realtimeproducts"
-
           }
+        }
+        else {
+          loginError.innerHTML = ""
+          let loginErrorP = document.createElement("p")
+          loginErrorP.innerText = "Credenciales inválidas"
+          loginErrorP.style.color="rgb(188, 36, 36)"
+          loginErrorP.style.fontSize = "15px"
+          loginErrorP.style.textAlign = "center"
+          loginError.append(loginErrorP)
         }
       })
       .catch((error) => alert("usuario no encontrado"))

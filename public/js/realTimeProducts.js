@@ -151,7 +151,6 @@ socket.on("renderChanges",(data)=>{
         }
         })
 
-
 //Función deleteProduct
 function deleteProduct(){
     deleteIdBtn.addEventListener("click", function(Event){
@@ -164,24 +163,7 @@ function deleteProduct(){
 
         if(validateId){       
             socket.emit("findId", itemDelete )
-            socket.on("resultFindId",(data)=>{
-                console.log(data)
-                if(data!=null){
-                    socket.emit("deleteItem",itemDelete)
-                    idInvalida.innerHTML= ""
-                    let deleteSucces = document.createElement("p")
-                    deleteSucces.innerText = "* Productos eliminado exitósamente"
-                    deleteSucces.style.color="rgb(23, 123, 25)"
-                    idInvalida.appendChild(deleteSucces)
-                }
-                else{
-                    idInvalida.innerHTML= ""
-                    let deleteMsg = document.createElement("p")
-                    deleteMsg.innerText = "* La Id ingresada no se encuentra en el listado de productos"
-                    deleteMsg.style.color = "rgb(188, 36, 36)"
-                    idInvalida.appendChild(deleteMsg)
-                }
-        })}
+        }
         else{
             idInvalida.innerHTML= ""
             let deleteMsg = document.createElement("p")
@@ -191,6 +173,32 @@ function deleteProduct(){
         }
     }
 )}
+
+socket.on("resultFindId",(data)=>{
+    if(data!=null){
+        socket.emit("deleteItem",deleteIdForm.value)
+        idInvalida.innerHTML= ""
+        let deleteSucces = document.createElement("p")
+        deleteSucces.innerText = "* Productos eliminado exitósamente"
+        deleteSucces.style.color="rgb(23, 123, 25)"
+        idInvalida.appendChild(deleteSucces)
+    }
+    else{
+        idInvalida.innerHTML= ""
+        let deleteMsg = document.createElement("p")
+        deleteMsg.innerText = "* La Id ingresada no se encuentra en el listado de productos"
+        deleteMsg.style.color = "rgb(188, 36, 36)"
+        idInvalida.appendChild(deleteMsg)
+    }
+})
+
+socket.on("unauthorized",(data)=>{
+    idInvalida.innerHTML= ""
+    let deleteMsg = document.createElement("p")
+    deleteMsg.innerText = "* El usuario no posee autorización para eliminar el producto"
+    deleteMsg.style.color = "rgb(188, 36, 36)"
+    idInvalida.appendChild(deleteMsg)
+})
 
 //Funciones necesarias para mostrar el producto completo al clickear en (ver completo)
 function showItem(e){

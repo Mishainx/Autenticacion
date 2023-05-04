@@ -1,4 +1,3 @@
-
 //Configuración de un event listener para mostrar la descripción completa del producto al hacer click en "Ver completo"
 let btnsShow = document.querySelectorAll('.btnShow')
 

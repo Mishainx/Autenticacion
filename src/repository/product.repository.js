@@ -23,7 +23,7 @@ export default class ProductRepository{
             return result
         }
         catch(error){
-            next(error)
+            throw error
         }
     }
 

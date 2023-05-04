@@ -52,4 +52,14 @@ export default class UserManager{
             throw err;
         }
     }
+
+    updateProperty = async(id,property)=>{
+        try {
+            let result = await userModel.findByIdAndUpdate({_id:id},property)
+            return result
+        }
+        catch (err) {
+            throw err;
+        }
+    }
 }

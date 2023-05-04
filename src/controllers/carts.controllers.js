@@ -122,6 +122,13 @@ const addItemToCart = async (req, res) => {
       res.status(400).send({status:"Error", message:"No hay stock suficiente para la cantidad solicitada"})
     return
     }
+
+    //Comprobación de que el producto a agregar  no haya sido creado por el usuario
+    if(req.session.user.role == "Premium" && req.session.user.email == productExist.owner){
+      req.logger.warning(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Usuario ${req.session.user.email} sin autorización para agregar el producto ${productExist}`)
+      res.status(401).send({status:"error", message:"Usuario sin autorización"})
+      return
+    }
   
     //Si se comprueba la validez de los parámetros se ejecutan las acciones para agregar el producto al carrito
     try {

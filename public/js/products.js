@@ -4,6 +4,21 @@ let buttonsQuantity = document.querySelectorAll(".productQuantityButton")
 let listProductsContainer = document.getElementById("listProductsContainer")
 let messageDiv = document.getElementById("messageDiv")
 
+const messageDivMessage = (value, message) =>{
+    messageDiv.innerHTML= ""
+    const messageDivP = document.createElement("p")
+    messageDivP.style.textAlign = "center"
+
+    if(value){
+        messageDivP.innerText = `${message}`
+        messageDivP.style.color = "rgb(23, 123, 25)"
+    }
+    else{
+        messageDivP.innerText = `${message}`
+        messageDivP.style.color = "rgb(188, 36, 36)"
+    }
+    messageDiv.append(messageDivP)
+}
 
 //Configuración para agregar el producto al carrito
 for(let btn of buttonsQuantity){
@@ -26,7 +41,7 @@ for(let btn of buttonsQuantity){
         socket.emit("sendItem", item)
 
 
-        socket.once("addSuccess",async(data)=>{
+        socket.once("addSuccess",(data)=>{
             if(data.newProduct.stock >0){
                 productStock.innerText =  `stock: ${data.newProduct.stock} ` 
             }
@@ -36,28 +51,18 @@ for(let btn of buttonsQuantity){
                 father.classList.add("noStock")
             }
         })
+    }      
+}
 
-
-    }
-        
-    }
-
-    socket.on("stockError",async(data)=>{
-        let errorP = document.createElement("p")
-        messageDiv.innerHTML = ""
-        errorP.innerText = "* No hay stock suficente para la cantidad solicitada"
-        errorP.style.color="rgb(188, 36, 36)"
-        errorP.style.fontSize = "15px"
-        errorP.style.textAlign = "center"
-        messageDiv.append(errorP)
+socket.on("stockError",(data)=>{
+    messageDivMessage(false,data.error)
 })
 
-socket.on("addSuccess",async(data)=>{
-    let successP = document.createElement("p")
-    messageDiv.innerHTML = ""
-    successP.innerText = "* Producto agregado exitósamente al carrito"
-    successP.style.color="rgb(23, 123, 25)"
-    successP.style.fontSize = "15px"
-    successP.style.textAlign = "center"
-    messageDiv.append(successP)
+socket.on("addSuccess",(data)=>{
+    messageDivMessage(true,"Producto agregado exitosamente")
+})
+
+socket.on("unauthorized buy", ()=>{
+    messageDivMessage(false,"Compra sin autorización")
+
 })

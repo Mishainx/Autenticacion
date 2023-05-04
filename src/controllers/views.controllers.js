@@ -17,7 +17,7 @@ const getHome = async (req,res)=>{
     try{
         let cartDirection = req.user.cart
         const productsList = await productRepository.getProducts()
-        res.status(200).render('home',{styleSheets:'css/styles',productsList, cartDirection})
+        res.status(200).render('home',{productsList, cartDirection})
     }
     catch(err){
       req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
@@ -30,11 +30,11 @@ const getRealTimeProducts = async (req,res)=>{
       console.log(req.session.user)
       let cartDirection = req.user.cart
         const productsList = await productRepository.getProducts()
-        res.status(200).render('realTimeProducts',{styleSheets:'css/styles',productsList, cartDirection})
+        res.status(200).render('realTimeProducts',{productsList, cartDirection})
     }
     catch(err){
       req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto agregado exitosamente`)
-        res.status(500).send({error:err})
+      res.status(500).send({error:err})
     }
 }
 
@@ -157,11 +157,11 @@ const getProducts = async (req,res)=>{
 
         if(page < 1 || page> parseInt(productList.totalPages)){
           message = "La página ingresada no es válida"
-          res.status(300).render('products',{styleSheets:'css/styles', message})
+          res.status(300).render('products',{message})
           return
         }
 
-        res.status(200).render('products',{styleSheets:'css/styles', productList,cartDirection,user})
+        res.status(200).render('products',{productList,cartDirection,user})
     }
     catch(err){
       req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
@@ -171,7 +171,7 @@ const getProducts = async (req,res)=>{
 
 const getChat = async(req,res)=>{
     let cartDirection = await assignedCart
-    res.status(200).render('chat',{title:"Chat",styleSheets:'css/styles',cartDirection})
+    res.status(200).render('chat',{title:"Chat",cartDirection})
 }
 
 const getCartsId = async (req,res)=>{
@@ -183,7 +183,7 @@ const getCartsId = async (req,res)=>{
     //Comprobación de la estructura del parámetro Id recibido 
     if(cartId.trim().length!=24){ 
         let message = "La Id ingresada es inválida"
-        res.status(400).render('carts_Id',{title:"Cart Id",styleSheets:'css/styles', message})
+        res.status(400).render('carts_Id',{title:"Cart Id",message})
         return
       }
   
@@ -191,19 +191,19 @@ const getCartsId = async (req,res)=>{
       const cartExist = await cartRepository.getIdCarts(cartId) //await cartModel.findById(cartId).lean().populate("products.product")
       if(cartExist==null){
         let message = "No existe un carrito con la Id seleccionada"
-        res.status(400).render('carts_Id',{title:"Cart Id",styleSheets:'css/styles', message})
+        res.status(400).render('carts_Id',{title:"Cart Id", message})
         return
       }
       else{
         cart = cartExist
       }
 
-    res.status(200).render('carts_Id',{title:"Cart Id",styleSheets:'css/styles', cart, cartDirection})
+    res.status(200).render('carts_Id',{title:"Cart Id", cart, cartDirection})
 }
 
 const getCarts = async (req,res)=>{
     let message = "Para solicitar un Cart por favor indique el Id (/api/views/carts/:cid)"
-    res.status(200).render('carts_Id',{title:"Cart Id",styleSheets:'css/styles', message})
+    res.status(200).render('carts_Id',{title:"Cart Id", message})
 }
 
 export {

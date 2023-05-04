@@ -202,10 +202,17 @@ const createProduct = async (req, res,next) => {
       if(codeExist){ 
         res.status(400).send({error: "El código ingresado ya existe"})
         return
+      }
 
+      let owner;
+      if(req.session.user){
+        if(req.session.user.role == "Premium"){
+          owner = req.session.user?.email?req.session.user.email:undefined //Para el caso que el usuario proviene de github el email es null  
+        }
       }
 
       const response = await productRepository.createProducts({
+        owner,
         title,
         description,
         code,
@@ -216,7 +223,7 @@ const createProduct = async (req, res,next) => {
         status,
       });
 
-      req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto creado exitosamente`)
+      req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto creado exitosamente: ${response}`)
       res.status(200).send({ message: "Producto creado", response });
     } catch (error) {
       req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Error al crear el producto`)
@@ -238,9 +245,16 @@ const deleteProduct = async (req, res) => {
   
     if(productExist==null){
       res.status(400).send({error:"No existe un producto con la Id ingresada"})
-      return
+      return 
     }
-  
+
+    //Comprobación del rol del usuario para eliminar productos
+   if(req.session.user.role == "Premium" && req.session.user.email != productExist.owner){
+    req.logger.warning;(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Usuario ${req.session.user.email} sin autorización para eliminar el producto ${productExist}`)
+    res.status(401).send({status:"error", message:"Usuario sin autorización"})
+    return
+  }
+
     //Si se comprueba la Id se ejecutan las acciones para eliminar el producto.
     try {
       const result = await productRepository.deleteProducts(id);
