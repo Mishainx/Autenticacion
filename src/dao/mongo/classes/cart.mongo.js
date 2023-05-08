@@ -1,6 +1,7 @@
 import cartModel from "../models/carts.model.js"
 import { productModel } from "../models/products.model.js";
 import ticketModel from "../models/tickets.model.js";
+import crypto from "crypto"
 
 export default class CartManager {
     constructor(){}
