@@ -1,0 +1,397 @@
+paths:
+
+  /api/products:
+    get:
+      summary: Obtiene todos los productos
+      tags: 
+        - Products
+      responses:
+        "200":
+          description: El listado de productos fue obtenido con éxito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: valor del estado de la petición
+                    example: "success"
+                  payload:
+                    type: array
+                    items:
+                      $ref: "#components/schemas/Product"
+                  totalPages:
+                    type: number
+                    description: total de páginas del listado de productos
+                  prevPage:
+                    type: number
+                    description: número de la página anterior
+                  nextPage:
+                    type: number
+                    description: número de la página siguiente
+                  page:
+                    type: number
+                    description: número de la página actual
+                  hasPrevPage:
+                    type: boolean
+                    description: indica si existe página anterior
+                  hasNextPage:
+                    type: boolean
+                    description: indica si existe página posterior
+                  prevLink:
+                    type: string
+                    description: url de la página anterior
+                    example: http://localhost:8080/api/views/products?page=0
+                  nextLink:
+                    type: string
+                    description: url de la página siguiente
+                    example: http://localhost:8080/api/views/products?page=2
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: estado de la petición
+                    example: "error"
+                  payload:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"                    
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: estado de la petición
+                    example: "error"
+                  payload:
+                    type: string
+                    description: mensaje de error
+    post:
+      summary: Recibe un producto y lo crea en la base de datos
+      tags: 
+        - Products
+      requestBody:
+        required: true
+        content:
+          applicattion/json:
+            schema:
+              $ref: "#components/requestBodies/updateProduct"
+      responses:
+        "200":
+          description: El producto fue creado con éxito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: string
+                    description: valor del estado de la petición
+                    example: "Producto creado"
+                  payload:
+                    type: object
+                    $ref: "#components/schemas/Product"
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: estado de la petición
+                    example: "error"
+                  payload:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"                
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: estado de la petición
+                    example: "error"
+                  payload:
+                    type: string
+                    description: mensaje de error
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene una producto determinado por id
+      tags: 
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: id del producto que se desea solicitar
+        schema: 
+          $type: String
+      responses:
+        "200":
+          description: El producto fue obtenido con éxito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: valor del estado de la petición
+                  payload:
+                    type: object
+                    description: producto solicitado
+                    $ref: "#components/schemas/Product"
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+    put:
+      summary: Actualiza un producto de la base de datos
+      tags: 
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: id del producto que se desea actualizar
+        schema: 
+          $type: String
+      requestBody:
+        required: true
+        content:
+          applicattion/json:
+            schema:
+              $ref: "#components/requestBodies/updateProduct"
+      responses:
+        "200":
+          description: El producto fue actualizado con éxito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: valor del estado de la petición
+                    example: Producto actualizado exitósamente
+                  response:
+                    type: object
+                    description: producto eliminado
+                    $ref: "#components/schemas/Product"
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+    delete:
+      summary: Elimina un producto de la base de datos
+      tags: 
+        - Products
+      parameters:
+      - name: pid
+        in: path
+        required: true
+        description: id del producto que se desea eliminar
+        schema: 
+          $type: String
+      responses:
+        "200":
+          description: El producto fue eliminado con éxito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: valor del estado de la petición
+                    example: Producto eliminado
+                  result:
+                    type: object
+                    description: producto eliminado
+                    $ref: "#components/schemas/Product"
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"
+        "401":
+          description: Usuario sin autorización para realizar la acción
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: estado de la acción
+                    example: "error"
+                  message:
+                    type: string
+                    description: mensaje de error
+                    example: "Usuario sin autorización"
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado por mongo
+        owner:
+          type: String
+          description: Nombre del usuario/admin que creó el producto
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Breve descripción del producto
+        Code:
+          type: String
+          description: Código del producto. Es único. Propiedad indexada
+        Price:
+          type: Number
+          description: Precio del producto
+        Thumbnail:
+          type: Array
+          description: Lista que contiene imágenes del producto
+        Stock:
+          type: Number
+          description: Cantidad existente en stock del producto
+        Category:
+          type: String
+          description: Categoría del producto
+        Status:
+          type: Boolean
+          description: TRUE/FALSE marca el estado del producto
+        __v:
+          type: Number
+          description: Versión del objeto
+          example: 0
+      example:
+        _id: ObjectId("644e9f6193979fc20618bc4c")
+        owner: admin
+        title: Manzana
+        description: Manzana por KG
+        code: codigo1
+        price: 400
+        thumbnail: []
+        stock: 489
+        category: fruta
+        status: true
+        __v: 0
+
+  requestBodies:
+
+    createProduct:
+      type: object
+      properties:
+        title:
+          type: String
+          description: Nombre del producto
+        description:
+          type: String
+          description: Breve descripción del producto
+        Code:
+          type: String
+          description: Código del producto. Es único. Propiedad indexada
+        Price:
+          type: Number
+          description: Precio del producto
+        Thumbnail:
+          type: Array
+          description: Lista que contiene imágenes del producto
+        Stock:
+          type: Number
+          description: Cantidad existente en stock del producto
+        Category:
+          type: String
+          description: Categoría del producto
+        Status:
+          type: Boolean
+          description: TRUE/FALSE marca el estado del producto
+      example:
+        title: Manzana
+        description: Manzana por KG
+        price: 400
+        thumbnail: []
+        code: codigo122
+        stock: 10
+        category: fruta
+        status: TRUE
+    updateProduct:
+      type: object
+      properties:
+        stock:
+          type: number
+          description: cantidad a actualizar el producto
+          example: 80
+

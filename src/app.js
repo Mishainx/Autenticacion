@@ -11,6 +11,9 @@ import { Server } from "socket.io";
 import { socketModule } from "./socket/socket.js";
 //Cookie Parser
 import cookieParser from "cookie-parser";
+//Swagger
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express"
 //Handlebars
 import { engine } from "express-handlebars";
 //Import Routes
@@ -26,7 +29,6 @@ import usersRouter from "./routes/users.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 //Errors
 import errorHandler from "./middlewares/errors.js";
-
 //Config
 import flash from "connect-flash"
 import config from "./config/config.js";
@@ -107,7 +109,24 @@ app.use((req, res, next)=>{
 //socket
 socketModule(socketServer)
 
+
+//SwaggerOptions
+const SwaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info:{
+      title: "Documentación ecommerce",
+      description: "API de ecommerce"
+    }
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`]
+}
+
+//conectamos Swagger
+const specs =  swaggerJsdoc(SwaggerOptions)
+
 //Rutas express
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 app.use("/messages", messageRoute);
 app.use('/api/views', routerViews)
 app.use("/api/users", usersRouter)

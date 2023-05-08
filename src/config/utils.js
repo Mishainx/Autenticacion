@@ -4,7 +4,7 @@ const _filename = fileURLToPath(import.meta.url);
 const __filename = _filename.slice(0,-15)
 export const __dirname = dirname(__filename);
 import bcrypt from 'bcrypt'
-import { faker } from '@faker-js/faker';
+import  { faker }  from '@faker-js/faker';
 import { Users } from "../dao/persistence.js";
 import UserRepository from "../repository/user.repository.js";
 let users = new Users()

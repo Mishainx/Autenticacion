@@ -12,7 +12,7 @@ let response;
 const getCarts = async (req, res) => {
     try {
       const cart = await cartRepository.getCarts();
-      res.send(cart);
+      res.status(200).send(cart);
     } catch (err) {
       req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
       res.status(500).send(err.message);

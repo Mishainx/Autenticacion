@@ -88,7 +88,7 @@ const getProducts = async (req, res) => {
         else{
           let newUrl = new URLSearchParams(req.originalUrl)
           newUrl.set('page',2)
-           nextLink = newUrl.toString().replace(/%2F/g,'/').replace(/%3F/g,'?')
+          nextLink = newUrl.toString().replace(/%2F/g,'/').replace(/%3F/g,'?')
         }
     }
   
@@ -249,7 +249,7 @@ const deleteProduct = async (req, res) => {
     }
 
     //Comprobación del rol del usuario para eliminar productos
-   if(req.session.user.role == "Premium" && req.session.user.email != productExist.owner){
+  if(req.session.user.role == "Premium" && req.session.user.email != productExist.owner){
     req.logger.warning;(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Usuario ${req.session.user.email} sin autorización para eliminar el producto ${productExist}`)
     res.status(401).send({status:"error", message:"Usuario sin autorización"})
     return

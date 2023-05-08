@@ -1,0 +1,143 @@
+paths:
+
+  /api/carts:
+    get:
+      summary: Obtiene todos los carritos
+      tags: 
+        - Carts
+      responses:
+        "200":
+          description: El listado de carritos fue obtenido con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Cart"
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+    post:
+      summary: Crea un carrito en la base de datos
+      tags: 
+        - Carts
+      responses:
+        "200":
+          description: El carrito fue creado con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: mensaje de estado de la petición
+                    example: Carrito creado
+                  response:
+                    type: object
+                    properties:
+                      _id:
+                        type: mongoose.Schema.Types.ObjectId
+                        description: Id del carrito
+                        example: 644e9f6193979fc20618bc4c
+                      products:
+                        type: array
+                        description: array de productos
+                        example: []
+                      __v:
+                        type: number
+                        description: versión del carrito
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene una cart determinado por id
+      tags: 
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: id del cart que se desea solicitar
+        schema: 
+          $type: String
+      responses:
+        "200":
+          description: El cart fue obtenido con éxito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: valor del estado de la petición
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "error"        
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado por mongo
+        products:
+          type: array
+          description: Array de productos del carrito
+          items:
+            type: object
+            properties:
+              product:
+                type: mongoose.Schema.Types.ObjectId
+                description: Id del producto
+                example: 644e9f6193979fc20618bc4c
+              quantity:
+                type: number
+                description: cantidad del producto en el carrito
+                example: 10
+        __v:
+          type: Number
+          description: Versión del objeto
+          example: 0
+      example:
+        _id: ObjectId("640e1cab7d6b44b720aa7dbc")
+        products: [
+                {
+            "product": "644e9f4c93979fc20618bc48",
+            "quantity": 7,
+            "_id": "644f8f78cb857f1c0998e344"
+            },
+            {
+              "product": "644e9f6193979fc20618bc4c",
+              "quantity": 10,
+              "_id": "644f96f4888c6984107726d7"
+            }
+        ]
+        __v: 0
