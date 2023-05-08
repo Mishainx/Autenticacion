@@ -400,15 +400,15 @@ transform: rotate(360deg);
 @media screen and (max-width: 1200px) {
 
 .listProductsContainer{
-    width: 80%;
     height: 100px;
 }
 
-.listProductsC{
-    width: 90%;
-}
 
 .itemProductContainer, .productQuantity,  .productQuantityButton{
     font-size: 0.5rem;
+}
+
+.itemProductContainer{
+    width: 250px;
 }
 }
