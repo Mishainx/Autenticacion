@@ -62,7 +62,7 @@ const createCart = async (req, res) => {
 }
 
 const deleteCartId = async (req, res) => {
-    const { id } = req.params;
+    const  id  = req.params.cid;
     try {
   
       //Comprobación de la estructura del parámetro Id recibido 
@@ -246,6 +246,8 @@ const cartUpdateProduct =  async(req,res)=>{
     const  cartId  = req.params.cid;
     const productId = req.params.pid
     const newQuantity = req.body
+
+    console.log(cartId, productId, newQuantity)
   
     try {
     //Comprobación de la estructura y validez de la Id de producto y la Id del carrito recibidos por parámetro
@@ -264,13 +266,13 @@ const cartUpdateProduct =  async(req,res)=>{
       res.status(400).send({error:"No existe un producto con la Id ingresada"})
       return
     }
-   else if(cartExist==null){
+    else if(cartExist==null){
       res.status(400).send({error:"No existe un Cart con la Id ingresada"})
       return
     }
   
     // Comprobación de que el producto exista en el carrito
-    let productExistInCart = cartExist.products.find((product)=>product.product._id == productId)
+    let productExistInCart = cartExist.products.find((product)=>product.product?._id == productId)
     if(productExistInCart == undefined){
     res.status(400).send({error:"No existe un producto en el carrito con la Id ingresada"})
     return

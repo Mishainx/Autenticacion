@@ -6,7 +6,6 @@ const router = Router();
 // la ruta api/products devuelve el listado de productos existentes en MongoDB. Posee los siguientes querys configurados: limit, page, category, stock.
 router.get("/", getProducts);
 
-
 // api/products post recibe un producto por parámetro y lo crea en la base de datos
 router.post("/",authPostman,checkRolePostman(["Admin", "Premium"]), createProduct);
 

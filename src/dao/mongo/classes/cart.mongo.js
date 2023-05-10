@@ -163,11 +163,14 @@ export default class CartManager {
     purchase = async(buyData)=>{
         try{
             let {user,role,cart} = buyData
+            console.log(buyData)
             let date = new Date()
             let selectedCart = await cartModel.findById(cart).populate("products.product")
             let totalAmount = 0
             selectedCart.products.forEach(product => {
-                totalAmount = totalAmount + (product.product.price*product.quantity)
+                totalAmount = totalAmount + (product.product?.price*product.quantity)
+                console.log(totalAmount)
+
             });
             let ticketInfo ={
                 code:crypto.randomUUID(),

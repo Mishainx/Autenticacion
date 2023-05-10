@@ -2,7 +2,7 @@ paths:
 
   /api/products:
     get:
-      summary: Obtiene todos los productos
+      summary: Obtiene todos los productos de la base de datos
       tags: 
         - Products
       responses:
@@ -61,7 +61,7 @@ paths:
                   payload:
                     type: string
                     description: mensaje de error
-                    example: "La id ingresada es inválida"                    
+                    example: "El valor ingresado para stock es incorrecto"                    
         "500":
           description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
           content: 
@@ -69,13 +69,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                    description: estado de la petición
-                    example: "error"
-                  payload:
+                  error:
                     type: string
                     description: mensaje de error
+                    example: mensaje de error
     post:
       summary: Recibe un producto y lo crea en la base de datos
       tags: 
@@ -85,7 +82,7 @@ paths:
         content:
           applicattion/json:
             schema:
-              $ref: "#components/requestBodies/updateProduct"
+              $ref: "#components/requestBodies/createProduct"
       responses:
         "200":
           description: El producto fue creado con éxito
@@ -108,14 +105,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                    description: estado de la petición
-                    example: "error"
-                  payload:
+                  error:
                     type: string
                     description: mensaje de error
-                    example: "La id ingresada es inválida"                
+                    example: El código ingresado ya existe              
         "500":
           description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
           content: 
@@ -123,13 +116,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
+                  error:
                     type: string
                     description: estado de la petición
-                    example: "error"
-                  payload:
-                    type: string
-                    description: mensaje de error
+                    example: mensaje de error
 
   /api/products/{pid}:
     get:
@@ -154,6 +144,7 @@ paths:
                   status:
                     type: string
                     description: valor del estado de la petición
+                    example: success
                   payload:
                     type: object
                     description: producto solicitado
@@ -179,6 +170,7 @@ paths:
                   error:
                     type: string
                     description: mensaje de error
+                    example: mensaje de error
     put:
       summary: Actualiza un producto de la base de datos
       tags: 
@@ -233,6 +225,7 @@ paths:
                   error:
                     type: string
                     description: mensaje de error
+                    example: mensaje de error
     delete:
       summary: Elimina un producto de la base de datos
       tags: 
@@ -296,6 +289,7 @@ paths:
                   error:
                     type: string
                     description: mensaje de error
+
 
 components:
   schemas:

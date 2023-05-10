@@ -24,6 +24,7 @@ paths:
                   error:
                     type: string
                     description: mensaje de error
+                    example: mensaje de error
     post:
       summary: Crea un carrito en la base de datos
       tags: 
@@ -64,6 +65,7 @@ paths:
                   error:
                     type: string
                     description: mensaje de error
+                    example: mensaje de error
 
   /api/carts/{cid}:
     get:
@@ -83,11 +85,18 @@ paths:
           content: 
             applicattion/json:
               schema:
+                $ref: "#components/schemas/Cart"
+        "404":
+          description: Error del lado del cliente generalmente provocado por el ingreso de un parámetro incorrecto o defeciente
+          content: 
+            application/json:
+              schema:
                 type: object
                 properties:
-                  status:
+                  error:
                     type: string
-                    description: valor del estado de la petición
+                    description: mensaje de error
+                    example: No existe un Cart con la Id ingresada
         "500":
           description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
           content: 
@@ -98,7 +107,371 @@ paths:
                   error:
                     type: string
                     description: mensaje de error
-                    example: "error"        
+                    example: " mensaje de error"
+    put:
+      summary: Modifica un carrito recibiendo un array de productos
+      tags: 
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: id del cart que se desea modificar
+        schema: 
+          $type: String
+      requestBody:
+        required: true
+        content:
+          applicattion/json:
+            schema:
+              $ref: "#components/requestBodies/updateCart"
+      responses:
+        "200":
+          description: El carrito fue actualizado con éxito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: valor del estado de la petición
+                    example: success
+                  message:
+                    type: string
+                    description: mensaje de response
+                    example: Carrito actualizado
+                  payload:
+                    $ref: "#components/schemas/Cart"
+        "404":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros inexistentes
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: No existe un Cart con la Id ingresada
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "error"
+
+    delete:
+      summary: Elimina los productos de un cart de la base de datos
+      tags: 
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: id del cart que se desea vaciar
+        schema: 
+          $type: String
+      responses:
+        "200":
+          description: El carrito fue vaciado con éxito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: valor del estado de la petición
+                    example: success
+                  message:
+                    type: string
+                    description: mensaje de response
+                    example: Productos del carrito eliminados exitósamente
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"
+        "404":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros inexistentes
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: No existe un Cart con la Id ingresada
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "mensaje de error"
+
+  /api/carts/{cid}/products/{pid}:
+    put:
+      summary: Modifica la propiedad quantity de un producto
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: id del cart donde se encuentra el producto a modificar
+        schema: 
+          $type: String
+      - name: pid
+        in: path
+        required: true
+        description: id del producto que se desea modificar
+        schema: 
+          $type: String
+      requestBody:
+        required: true
+        content:
+          applicattion/json:
+            schema:
+              $ref: "#components/requestBodies/updateProductQuantity"
+      responses:
+        "200":
+          description: El producto se ha actualizado exitósamente
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: valor del estado de la petición
+                    example: success
+                  message:
+                    type: string
+                    description: mensaje de response
+                    example: El producto se ha actualizado exitósamente
+                  payload:
+                    $ref: "#components/schemas/Cart"
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "mensaje de error"
+    post:
+      summary: Agrega un producto a un carrito
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: id del cart donde se agregará el producto
+        schema: 
+          $type: String
+      - name: pid
+        in: path
+        required: true
+        description: id del producto que se agregar
+        schema: 
+          $type: String
+      requestBody:
+        required: true
+        content:
+          applicattion/json:
+            schema:
+              $ref: "#components/requestBodies/addProductCart"
+      responses:
+        "200":
+          description: El producto se ha agregado exitosamente
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: valor del estado de la petición
+                    example: success
+                  message:
+                    type: string
+                    description: mensaje de response
+                    example: Producto agregado exitosamente al carrito
+                  payload:
+                    $ref: "#components/schemas/Cart"
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"
+        "404":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros inexistentes
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: No existe un Cart con la Id ingresada
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "error"
+    delete:
+      summary: Elimina un producto del carrito
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: id del cart donde se desea eliminar el producto
+        schema: 
+          $type: String
+      - name: pid
+        in: path
+        required: true
+        description: id del producto que se desea eliminar
+        schema: 
+          $type: String
+
+      responses:
+        "200":
+          description: El producto se ha eliminado exitosamente
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: mensaje de response
+                    example: Producto eliminado del carrito
+                  payload:
+                    $ref: "#components/schemas/Cart"
+        "400":
+          description: Error del lado del cliente generalmente provocado por el ingreso de parámetros incorrectos
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "La id ingresada es inválida"
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "error"
+
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Finaliza el proceso de compra y genera un ticket
+      tags:
+        - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: id del cart donde se desea concretar la compra
+        schema: 
+          $type: String
+      responses:
+        "200":
+          description: Producto agregado exitósamente al carrito
+          content: 
+            applicattion/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: valor del estado de la petición
+                    example: success
+                  message:
+                    type: string
+                    description: mensaje de response
+                    example: Producto agregado exitosamente al carrito
+                  payload:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        description: código único de compra
+                        example: 0b23acf6-c08f-4317-a6d0-6a287cd44f2b
+                      purchase_datetime:
+                        type: string
+                        description: fecha y hora de compra
+                        example: 9/5/2023, 20:37:49 
+        "500":
+          description: Error del lado del servidor generalmente provocado por una query defectuosa o error en la conexión de base de datos
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: mensaje de error
+                    example: "error"
+
+
 
 components:
   schemas:
@@ -141,3 +514,35 @@ components:
             }
         ]
         __v: 0
+
+  requestBodies:
+    updateCart:
+      type: object
+      properties:
+        products:
+          type: array
+          description: Array de productos que contiene el carrito
+      example:
+        products:
+          - {
+            product: ObjectId(63e10985e529735dd5c48127),
+            quantity: 20
+          }
+          - {
+            product: ObjectId(62e15986a529735dd5f38427),
+            quantity: 23
+          }
+    updateProductQuantity:
+      type: object
+      properties:
+        quantity:
+          type: number
+          description: cantidad a modificar del producto
+          example: 80
+    addProductCart:
+      type: object
+      properties:
+        quantity:
+          type: number
+          description: cantidad a agregar del producto
+          example: 10
