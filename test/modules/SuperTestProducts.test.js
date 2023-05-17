@@ -23,8 +23,6 @@ export const productsTest = () =>{
         })
             it("El endpoint GET /api/products debe traer todos los productos en formato array",async()=>{
             const{
-                statusCode,
-                ok,
                 _body
             } = await requester.get("/api/products")
             expect(Array.isArray(_body.payload)).to.be.equal(true)
@@ -43,9 +41,7 @@ export const productsTest = () =>{
                 }
     
                 const{
-                    headers,
                     statusCode,
-                    ok,
                     _body,
                 } = await requester.post("/api/products").set("Cookie", [`${cookie.name}=${cookie.value}`]).send(productMock)
                 productId = _body.response._id
@@ -58,9 +54,6 @@ export const productsTest = () =>{
                 }
             
                 const{
-                    headers,
-                    statusCode,
-                    ok,
                     _body,
                 } = await requester.put(`/api/products/${productId}`).set("Cookie", [`${cookie.name}=${cookie.value}`]).send(updateMock)
                 expect(_body.response.stock).to.be.deep.equal(777)
@@ -69,10 +62,7 @@ export const productsTest = () =>{
         
 
             const{
-                headers,
                 statusCode,
-                ok,
-                _body,
             } = await requester.delete(`/api/products/${productId}`).set("Cookie", [`${cookie.name}=${cookie.value}`])
             expect(statusCode).to.be.deep.equal(200)
         })

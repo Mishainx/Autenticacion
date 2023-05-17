@@ -8,9 +8,7 @@ const userRepository = new UserRepository(users)
 const expect = chai.expect
 const requester = supertest(`http://0.0.0.0:8080`)
 let registeredUser
-let productId
 let cookie;
-let cookiePrueba
 
 export const sessionsTest = () =>{
         describe("Test de Sessions",async()=>{
@@ -25,9 +23,7 @@ export const sessionsTest = () =>{
                 }
     
                 const{
-                    statusCode,
-                    ok,
-                    _body
+                    statusCode
                 } = await requester.post("/api/sessions/signup").send(userMock)
                 registeredUser = await userRepository.getOneUsers({email:userMock.email})
                 expect(statusCode).to.not.be.equal(200)
@@ -43,8 +39,6 @@ export const sessionsTest = () =>{
     
                 const{
                     statusCode,
-                    ok,
-                    _body
                 } = await requester.post("/api/sessions/signup").send(userMock)
                 registeredUser= await userRepository.getOneUsers({email:userMock.email})
                 expect(statusCode).to.be.equal(200)
@@ -55,9 +49,7 @@ export const sessionsTest = () =>{
                     password: "usermock"
                 }
                 const{
-                    statusCode,
                     ok,
-                    _body
                 } = await requester.post("/api/sessions/login").send(loginMock)
                 expect(ok).to.not.be.equal(true)
             })
@@ -67,8 +59,6 @@ export const sessionsTest = () =>{
                     password: "usermock"
                 }
                 const{
-                    statusCode,
-                    ok,
                     _body,
                     headers
                 } = await requester.post("/api/sessions/login").send(loginMock)
@@ -107,7 +97,6 @@ export const sessionsTest = () =>{
             })
             it("El endpoint DELETE /api/users/delete/:uid debe eliminar el usuario de la base de datos", async()=>{
                 const{
-                    statusCode,
                     _body
                 } = await requester.post(`/api/users/delete/${registeredUser._id}`)
                 expect(_body.status).to.be.deep.eql("success");
