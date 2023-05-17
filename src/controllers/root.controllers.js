@@ -174,7 +174,7 @@ const getProfile = async (req,res)=>{
 const getCurrent = async(req,res)=>{
     let user = new CurrentDTO(req.session.user)
     if(user){
-        return   res.send(user)
+        return  res.send(user)
     }
     else{
         res.status(401).send({status:"error", message: "No hay una sesión iniciada"})

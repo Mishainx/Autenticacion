@@ -95,8 +95,6 @@ if(!validateAge){
     )
   );
 
-
-
   //Estrategia Login
   passport.use("login", new LocalStrategy({usernameField:'email'},async(username,password,done)=>{
     let user = await userRepository.getOneUsers({email:username})
@@ -121,7 +119,6 @@ if(!validateAge){
     callBackURL: config.CALLBACK_URL_GITHUB
   },async(accessToken,refreshToken,profile,done)=>{
     try{
-      console.log(profile._json)
       let user = await userRepository.getOneUsers({email:profile._json.email})
       if(!user){
         let newUser ={

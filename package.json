@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/SuperTest.test.js"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +24,6 @@
     "mongoose": "^6.9.0",
     "mongoose-paginate-v2": "^1.7.1",
     "nodemailer": "^6.9.1",
-    "nodemon": "^2.0.20",
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",
     "passport-local": "^1.0.0",
@@ -38,6 +37,10 @@
     "node": "18.16.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^7.6.0"
+    "@faker-js/faker": "^7.6.0",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
   }
 }

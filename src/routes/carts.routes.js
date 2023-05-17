@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addItemToCart, cartUpdateArray, cartUpdateProduct, createCart, deleteCartId, deleteItemFromCart, getCartId, getCarts, purchase } from "../controllers/carts.controllers.js";
+import { addItemToCart, cartUpdateArray, cartUpdateProduct, createCart, deleteCartId, deleteItemFromCart, getCartId, getCarts,deleteFromBase, purchase } from "../controllers/carts.controllers.js";
 import { authPostman,checkRolePostman } from "../middlewares/middlewares.js";
 const router = Router();
 
@@ -26,6 +26,8 @@ router.delete("/:cid/products/:pid", deleteItemFromCart);
 
 //La ruta api/carts/:cid/products/:pid (método put) actualiza la cantidad de ejemplares de un producto por parámetro
 router.put("/:cid/products/:pid", cartUpdateProduct)
+
+router.delete("/delete/:cid", deleteFromBase);
 
 router.post("/:cid/purchase",purchase)
 

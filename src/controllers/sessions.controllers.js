@@ -6,7 +6,6 @@ const postSessionsSignUp = async(req,res)=>{
 
 const postSessionsLogin = async(req,res)=>{
     if(!req.user) return res.status(400).send({status:"error", error: "Credenciales inválidas"})
-    console.log(req.user)
     req.session.user ={
       first_name: req.user.first_name,
       last_name: req.user.last_name,

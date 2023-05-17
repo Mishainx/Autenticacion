@@ -45,7 +45,7 @@ export default class UserManager{
     
     delete = async(userId)=>{
         try {
-            const result = await userModel.findByIdAndDelete(cartId);
+            const result = await userModel.findByIdAndDelete(userId);
             return result;
         }
         catch (err) {

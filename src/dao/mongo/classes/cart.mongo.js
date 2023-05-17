@@ -50,9 +50,9 @@ export default class CartManager {
         try {
             const result = await cartModel.findByIdAndDelete(cartId);
             return result;
-          } catch (err) {
+        } catch (err) {
             throw err;
-          }
+        }
     }
 
     update = async(cartId, productId, quantity)=>{

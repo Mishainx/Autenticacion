@@ -64,7 +64,7 @@ app.use(addLogger)
 
 //Express sessions middleware
 let sessionMiddleware = session({
-  secret: config.SESSION_SECRET,
+  secret:config.COOKIE_SECRET,
   resave: true,
   saveUninitialized: false,
   store: MongoStore.create({
@@ -138,4 +138,3 @@ app.use("/mockingproducts", mockingRouter)
 app.use("/loggerTest", loggerTestRouter)
 app.use("/", rootRouter) // Manejo de ruta raíz
 app.use(errorHandler)
-

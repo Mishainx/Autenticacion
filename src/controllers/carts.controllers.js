@@ -289,6 +289,29 @@ const cartUpdateProduct =  async(req,res)=>{
     }
 }
 
+const deleteFromBase = async (req, res) => {
+  try {
+    let cartId = req.params.cid
+    console.log(cartId)
+    if(cartId.trim().length!=24){
+      res.status(400).send({error: "La Id del Cart ingresada no es válida"})
+      return
+    }
+    const cartExist = await cartRepository.getIdCarts(cartId)
+  
+    if(cartExist==null){
+      res.status(400).send({error:"No existe un Cart con la Id ingresada"})
+      return
+    }
+
+    let result = await cartRepository.deleteCarts(cartId)
+    res.json({status:"success", message:`Carrito ${cartId} eliminado exitosamente`})
+  } catch (err) {
+    req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
+    res.status(500).send(err.message);
+  }
+}
+
 const purchase = async (req, res) => {
   try {
     let buyData = req.body
@@ -311,5 +334,6 @@ export{
     cartUpdate,
     cartUpdateProduct,
     cartUpdateArray,
+    deleteFromBase,
     purchase
 }

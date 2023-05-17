@@ -18,5 +18,8 @@ export default{
     SESSION_SECRET: process.env.SESSION_SECRET,
     COOKIE_SECRET: process.env.COOKIE_SECRET,
     PERSISTENCE: process.argv.includes("memory")? "MEMORY" : "MONGO",
-    ENVIROMENT: process.argv.includes("prod")? "PROD" : "DEV"
+    ENVIROMENT: process.argv.includes("prod")? "PROD" : "DEV",
+    TEST: process.argv.includes("products")? "products": "prueba",
+    TEST_USER : process.env.TEST_USER,
+    TEST_PASSWORD : process.env.TEST_PASSWORD
 }
