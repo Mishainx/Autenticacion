@@ -17,6 +17,8 @@ import resetPasswordModel from "../dao/mongo/models/resetPassword.model.js"
   }
 
   export const authPostman= async (req,res,next)=>{
+    console.log(req.headers)
+    console.log(req.session)
     if(req.session?.user != undefined){
       return next()
     }

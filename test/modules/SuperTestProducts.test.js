@@ -3,8 +3,9 @@ import supertest from "supertest";
 import config from "../../src/config/config.js";
 const expect = chai.expect
 const requester = supertest(`http://0.0.0.0:8080`)
-let cookie;
 let productId
+let cookie;
+
 
 export const productsTest = () =>{
 

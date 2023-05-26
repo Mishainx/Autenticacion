@@ -1,4 +1,8 @@
 import CurrentDTO from "../dto/current.dto.js"
+import UserRepository from "../repository/user.repository.js"
+import { Users } from "../dao/persistence.js"
+let users = new Users()
+let userRepository = new UserRepository(users)
 
 const postSessionsSignUp = async(req,res)=>{
     res.send({status:"success", message:"Usuario registrado exitosamente"})
@@ -14,6 +18,8 @@ const postSessionsLogin = async(req,res)=>{
       role: req.user.role,
       cart: req.user.cart
     }
+    let loginTime = new Date()
+    userRepository.updatePropertyUsers(req.user._id, {last_connection: loginTime})
     res.send({status:"success", payload:req.session.user})
 }
 

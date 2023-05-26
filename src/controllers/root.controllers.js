@@ -17,26 +17,28 @@ export let assignedCart
 
 const getLogin = async (req,res)=>{
     try{
-         res.status(200).render("login",{title:"login", noNav })
-     }
+        res.status(200).render("login",{title:"login", noNav })
+    }
     catch(err){
-     throw err
+        throw err
     }
 }
 
 const postLogin = async(req,res)=>{
     if(!req.user) return res.status(400).send({status:"error", error: "Credenciales inválidas"})
-      req.session.user ={
-      first_name: req.user.first_name,
-      last_name: req.user.last_name,
-      age: req.user.age,
-      email: req.user.email,
-      cart:  req.user.cart,
-      role: req.user.role
+        req.session.user ={
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.user.age,
+        email: req.user.email,
+        cart:  req.user.cart,
+        role: req.user.role
     }
     let response = req.session.user
     assignedCart = req.session.user.cart
-    req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Loggin exitoso`)
+    let loginTime = new Date()
+    userRepository.updatePropertyUsers(req.user._id, {last_connection: loginTime})
+    req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleString()} - Loggin exitoso`)
     res.json({message:"success", data: response})
 }
 
@@ -70,7 +72,6 @@ const createToken = async(req,res)=>{
             }
 
             let result = await resetPasswordRepository.createReset(resetRequest)
-            console.log(result)
             await resetMail(resetRequest)
 
             req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Reset password token request: \n ${result.email}`)
@@ -185,13 +186,15 @@ const getLogout = async (req,res)=>{
     try{
         req.session.destroy(err=>{
             if(err){
-              res.send({status:'error', message:'Error al cerrar la sesión: '+err});
+                res.send({status:'error', message:'Error al cerrar la sesión: '+err});
             }
             else{
-              req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Sesión destruida`)
-              res.clearCookie('connect.sid',{ path: '/' }).send({status:"success", message: "Sesión cerrada"})
+                let loginTime = new Date()
+                userRepository.updatePropertyUsers(req.user._id, {last_connection: loginTime})
+                req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Sesión destruida`)
+                res.clearCookie('connect.sid',{ path: '/' }).send({status:"success", message: "Sesión cerrada"})
             }
-          })
+        })
     }
     catch(error){
         req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
