@@ -654,7 +654,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/users/premium/64517d4725e1c03376697f07",
+							"raw": "http://localhost:8080/api/users/premium/640e1cab7d6b44b720aa7dbe",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -664,7 +664,58 @@
 								"api",
 								"users",
 								"premium",
-								"64517d4725e1c03376697f07"
+								"640e1cab7d6b44b720aa7dbe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "uploadDocuments",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "identification",
+									"type": "file",
+									"src": [
+										"7ABGFlBX4/banner - copia.jpg",
+										"7ABGFlBX4/banner.jpg"
+									]
+								},
+								{
+									"key": "residence",
+									"type": "file",
+									"src": [
+										"LvU5rjlm1/image (6) - copia.png",
+										"LvU5rjlm1/image (7) - copia.png"
+									]
+								},
+								{
+									"key": "account",
+									"type": "file",
+									"src": [
+										"vhasSRI1f/banner.jpg",
+										"vhasSRI1f/image (5) - copia.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/users/4654654546/documents",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"4654654546",
+								"documents"
 							]
 						}
 					},

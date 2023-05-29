@@ -3,7 +3,6 @@ import { __dirname } from "../config/utils.js";
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
-        console.log(req.files)
         switch(file.fieldname){
             case "profiles":
                 cb(null,__dirname+"/public/files/profiles")
@@ -26,7 +25,7 @@ const storage = multer.diskStorage({
         }
     },
     filename: function(req,file,cb){
-        cb(null,file.originalname)
+                cb(null,`${req.session.passport.user}-${file.fieldname}-${Date.now()}`)
     }
 })
 
