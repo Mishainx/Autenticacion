@@ -1,0 +1,23 @@
+<div class="usersContainer">
+    <div>
+            {{#each users}}
+            <div class="userIdContainer">
+                <p>Id: {{this._id}}</p>
+                <p>usuario: {{this.email}}</p>
+            </div>
+            {{/each}}
+        
+    </div>
+    <div>
+        <h2>Control Usuario</h2>
+        <input type="text" placeholder="Ingrese Id de usuario" id="userIdInput">
+        <div>
+            <button id="userViewBtn">Ver</button>
+            <button id="userRolBtn">Cambiar Rol</button>
+            <button id="userDeleteBtn">Eliminar</button>
+        </div>
+        <div id="controlUserMessage"></div>
+    </div>
+</div>
+
+<script src="/js/users.js"></script>

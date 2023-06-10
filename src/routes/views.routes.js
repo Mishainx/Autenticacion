@@ -1,6 +1,6 @@
 import { Router } from "express";
 const routerViews = Router();
-import { getHome, getRealTimeProducts, getProducts, getCartsId, getChat } from "../controllers/views.controllers.js";
+import { getHome, getRealTimeProducts, getProducts, getCartsId, getChat, getUsersView } from "../controllers/views.controllers.js";
 import { auth, checkRole } from "../middlewares/middlewares.js";
 
 // RouterViews.get "Home" devuelve una vista  del listado de productos sin socket server
@@ -18,5 +18,8 @@ routerViews.get("/chat",auth,checkRole(["User", "Premium"]), getChat)
 routerViews.get("/carts/:cid",auth,checkRole(["User", "Premium"]), getCartsId)
 
 routerViews.get('/carts',auth,checkRole(["User", "Premium"]))
+
+// RouterViews.get "Users" devuelve una vista  del panel de administración de usuarios
+routerViews.get('/users', auth, checkRole(["Admin"]), getUsersView)
 
 export default routerViews

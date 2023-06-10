@@ -7,14 +7,15 @@ import { generateProductsErrorInfo } from "../services/errors/info.js";
 import { Carts } from "../dao/persistence.js";
 import { Messages } from "../dao/persistence.js";
 import { Products } from "../dao/persistence.js";
-const products = new Products()
-const carts = new Carts()
-const message = new Messages()
+const products = await new Products()
+const carts = await new Carts()
+const message = await new Messages()
 
 //Repositories
 import MessageRepository from "../repository/message.repository.js";
 import CartRepository from "../repository/cart.repository.js";
 import ProductRepository from "../repository/product.repository.js";
+import { deleteProductMail } from "../controllers/mail.controllers.js";
 const messageRepository = new MessageRepository(message)
 const cartRepository = new CartRepository(carts)
 const productRepository = new ProductRepository(products)
@@ -59,6 +60,11 @@ export const socketModule = (socketServer) =>{
             }
         
             await productRepository.deleteProducts(data)
+            let owner = await productRepository.getOneProducts({email:productExist.owner})
+            if (owner && owner.role == "Premium"){
+              deleteProductMail(owner.email,data)
+            }
+            
             socket.emit("renderChanges",await productRepository.getProducts())
           })
         

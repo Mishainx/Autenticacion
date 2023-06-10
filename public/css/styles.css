@@ -397,6 +397,19 @@ transform: rotate(360deg);
 }
 }
 
+/*Users View*/
+.usersContainer{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.userIdContainer{
+    margin: 10px;
+}
+
 @media screen and (max-width: 1200px) {
 
 .listProductsContainer{

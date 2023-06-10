@@ -3,8 +3,9 @@ import ProductRepository from "../repository/product.repository.js";
 import CustomError from "../services/errors/customErrors.js";
 import EErrors from "../services/errors/enum.js";
 import { generateProductsErrorInfo } from "../services/errors/info.js";
+import { deleteProductMail } from "./mail.controllers.js";
 
-let products = new Products()
+let products = await new Products()
 let productRepository = new ProductRepository(products)
 
 const getProducts = async (req, res) => {
@@ -258,6 +259,7 @@ const deleteProduct = async (req, res) => {
     //Si se comprueba la Id se ejecutan las acciones para eliminar el producto.
     try {
       const result = await productRepository.deleteProducts(id);
+      console.log(result+"lala")
       req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Producto id: ${id} eliminado exitosamente`)
       res.status(200).send({ message: "Producto eliminado", result });
     } catch (err) {

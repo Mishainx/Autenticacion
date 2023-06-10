@@ -46,8 +46,34 @@ const resetMail = async(req,res)=>{
   })
 }
 
+const deleteMail = async(userEmail, req,res)=>{
+  let info = await transporter.sendMail({
+    from: `ecommerce <${config.MAIL_USER}>`,
+    to: `${userEmail}`, 
+    subject: `Cuenta inactiva eliminada`,
+    text: "Cuenta inactiva eliminada", 
+    html: `<div>
+              <p> Le informamos que su cuenta ha sido eliminada debido a que ha permanecido inactiva durante más de 48hs</p>
+          </div>`       
+  })
+}
+
+const deleteProductMail = async(userEmail,productId, req,res)=>{
+  let info = await transporter.sendMail({
+    from: `ecommerce <${config.MAIL_USER}>`,
+    to: `${userEmail}`, 
+    subject: `Producto eliminado`,
+    text: "Producto eliminado", 
+    html: `<div>
+              <p> Le informamos que el producto ${productId} ha sido eliminado</p>
+          </div>`       
+  })
+}
+
 export{
     getMail,
-    resetMail
+    resetMail,
+    deleteMail,
+    deleteProductMail
 }
 

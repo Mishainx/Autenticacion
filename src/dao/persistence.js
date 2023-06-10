@@ -25,38 +25,42 @@ const environment = async () => {
     }
   };
 
-  const isValidStartData = () => {
+const isValidStartData = () => {
     if (DB_PASS && DB_USER) return true;
     else return false;
 }
 
+const setVariables = async () => {
+  await messageModel.updateMany({},{status:false})
+    
+  const { default: ProductManager } = await import("./mongo/classes/product.mongo.js");
+  Products = ProductManager
+  const { default: CartManager } = await import("./mongo/classes/cart.mongo.js");
+  Carts = CartManager
+  const { default: UserManager } = await import("./mongo/classes/user.mongo.js");
+  Users = UserManager
+  const { default: MessageManager } = await import("./mongo/classes/message.mongo.js");
+  Messages = MessageManager
+}
+
+
+
 const persistence = config.PERSISTENCE;
-//switch (config.persistence) {
 switch (persistence) {
   case "MONGO":
-    console.log("Usando mongo")
+    console.log("Usando Mongo")
     environment();
     isValidStartData();
+    await setVariables()
 
-    await messageModel.updateMany({},{status:false})
-    
-    const { default: ProductManager } = await import("./mongo/classes/product.mongo.js");
-    Products = ProductManager
-    const { default: CartManager } = await import("./mongo/classes/cart.mongo.js");
-    Carts = CartManager
-    const { default: UserManager } = await import("./mongo/classes/user.mongo.js");
-    Users = UserManager
-    const { default: MessageManager } = await import("./mongo/classes/message.mongo.js");
-    Messages = MessageManager
 
-    break;
+  break;
   case "MEMORY":
-    console.log("Usando memory")
-/*    const { default: ContactMemory } = await import(
-      "./memory/contact.memory.js"
-    );
-    Contacts = ContactMemory;*/
-    break;
+  console.log("Memory en desarrollo Servidor funcionando en MONGO")
+  environment();
+  isValidStartData();
+  await setVariables()
+  break;
 }
 
 

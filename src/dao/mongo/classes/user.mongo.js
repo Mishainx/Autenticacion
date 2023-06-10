@@ -5,7 +5,7 @@ export default class UserManager{
 
     get = async()=>{
         try{
-            return await userModel.find();
+            return await userModel.find().lean();
         }
         catch (err) {
             throw err;

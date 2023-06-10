@@ -206,11 +206,24 @@ const getCarts = async (req,res)=>{
     res.status(200).render('carts_Id',{title:"Cart Id", message})
 }
 
+const getUsersView = async (req,res)=>{
+  try{
+    let users = await userRepository.getUsers()
+    console.log(users)
+    res.status(200).render('users',{users})
+}
+catch(err){
+  req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
+  res.status(500).send({error:err})
+}
+}
+
 export {
     getHome,
     getRealTimeProducts,
     getProducts, 
     getChat,
     getCartsId,
-    getCarts
+    getCarts,
+    getUsersView
 }
