@@ -43,7 +43,7 @@ export const socketModule = (socketServer) =>{
                 data.owner = owner
               }
             }
-            productRepository.createProducts(data)
+            await productRepository.createProducts(data)
             socket.emit("renderChanges", await productRepository.getProducts())
           })
         
@@ -68,7 +68,7 @@ export const socketModule = (socketServer) =>{
             socket.emit("renderChanges",await productRepository.getProducts())
           })
         
-           socket.on("sendItem",async (data)=>{
+          socket.on("sendItem",async (data)=>{
               try{
                 let selectedCart = await cartRepository.getIdCarts(assignedCart)
                 let productExistInCart = selectedCart.products.find((product)=>product.product?._id == data.id)

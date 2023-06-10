@@ -23,7 +23,7 @@ const environment = async () => {
     } catch (error) {
       console.log(`Error al conectar a MongoDB: ${error}`);
     }
-  };
+};
 
 const isValidStartData = () => {
     if (DB_PASS && DB_USER) return true;
@@ -43,8 +43,6 @@ const setVariables = async () => {
   Messages = MessageManager
 }
 
-
-
 const persistence = config.PERSISTENCE;
 switch (persistence) {
   case "MONGO":
@@ -53,10 +51,9 @@ switch (persistence) {
     isValidStartData();
     await setVariables()
 
-
   break;
   case "MEMORY":
-  console.log("Memory en desarrollo Servidor funcionando en MONGO")
+  console.log("Memory en desarrollo servidor funcionando en MONGO")
   environment();
   isValidStartData();
   await setVariables()

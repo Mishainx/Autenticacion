@@ -56,9 +56,6 @@ function createItem(){
         const categoryValidate = addCategory.value != undefined
         const statusValidate = addStatusForm.value == "True" || addStatusForm.value == "False"
 
-        console.log(titleValidate)
-
-
         
         if(titleValidate && descriptionValidate&&priceValidate&&stockValidate&&codeValidate&&categoryValidate){
             socket.emit("findCode", addCodeForm.value)
@@ -149,7 +146,7 @@ socket.on("renderChanges",(data)=>{
         for(let btn of btnsShow){
             btn.addEventListener("click", showItem)
         }
-        })
+})
 
 //Función deleteProduct
 function deleteProduct(){
