@@ -125,11 +125,11 @@ const createPassword = async(req,res)=>{
 
 const getSignUp = async (req,res)=>{
     try{
-         res.status(200).render("signup",{title:"signup",styleSheets:'css/styles', noNav })
-     }
+        res.status(200).render("signup",{title:"signup",styleSheets:'css/styles', noNav })
+    }
     catch(err){
     req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
-     throw err
+    throw err
     }
 }
 
@@ -155,17 +155,16 @@ const getGitHubCallback = async(req,res)=>{
 
 const getProfile = async (req,res)=>{
     try{
-      let findUser = await userRepository.getOneUsers({email:req.session.user.email})
-      let user ={
+        let findUser = await userRepository.getOneUsers({email:req.session.user.email})
+        let user ={
         email: req.session.user.email,
         role: findUser.role,
         name: findUser.first_name,
         surname: findUser.last_name,
         age: findUser.age
-      }
-  
-         res.status(200).render("profile",{title:"profile",styleSheets:'css/styles', user })
-     }
+    }
+    res.status(200).render("profile",{title:"profile",styleSheets:'css/styles', user })
+    }
     catch(err){
     req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()}`)
     throw err

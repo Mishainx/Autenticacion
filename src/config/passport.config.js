@@ -8,7 +8,6 @@ import { Users } from "../dao/persistence.js";
 import UserRepository from "../repository/user.repository.js";
 import { Carts } from "../dao/persistence.js";
 import CartRepository from "../repository/cart.repository.js";
-import userModel from "../dao/mongo/models/user.model.js";
 const carts = new Carts()
 const cartRepository = new CartRepository(carts)
 
