@@ -19,6 +19,7 @@ import { deleteProductMail } from "../controllers/mail.controllers.js";
 const messageRepository = new MessageRepository(message)
 const cartRepository = new CartRepository(carts)
 const productRepository = new ProductRepository(products)
+const mensajes = []
 
 export const socketModule = (socketServer) =>{
     socketServer.on("connection", async(socket) => {
@@ -26,6 +27,7 @@ export const socketModule = (socketServer) =>{
         let assignedCart = sessionUser.user?.cart
         
           socket.on("message", (data) => {
+            console.log(data)
             mensajes.push(data);
             socketServer.emit("messageLogs", mensajes);
             messageRepository.CreateMessage(mensajes)  

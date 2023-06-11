@@ -25,7 +25,6 @@ Swal.fire({
 chatBox.addEventListener("keyup", (e) => {
   if (e.key === "Enter") {
     if (chatBox.value.trim().length > 0) {
-      console.log(socket)
       const message = chatBox.value
       socket.emit("message", {
         user,

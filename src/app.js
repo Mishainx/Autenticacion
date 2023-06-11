@@ -34,7 +34,6 @@ import flash from "connect-flash"
 import config from "./config/config.js";
 import { addLogger } from "./config/logger.js";
 import { __dirname } from './config/utils.js';
-const mensajes = []
 
 const PORT = config.PORT ;
 const DB_USER = config.DB_USER;
@@ -93,12 +92,6 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname+"/src/views")
 app.use(express.static(__dirname +'/public'));
-
-app.post("/socketMessage", (req, res) => {
-  const { message } = req.body;
-  socketServer.emit("message", message);
-  res.send("ok");
-});
 
 // Middleware para agregar a las variables locales del objeto Response los datos de sesión.
 app.use((req, res, next)=>{ 
