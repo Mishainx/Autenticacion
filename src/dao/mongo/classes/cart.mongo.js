@@ -167,10 +167,9 @@ export default class CartManager {
             let date = new Date()
             let selectedCart = await cartModel.findById(cart).populate("products.product")
             let totalAmount = 0
+            console.log(await cartModel.findById(cart))
             selectedCart.products.forEach(product => {
                 totalAmount = totalAmount + (product.product?.price*product.quantity)
-                console.log(totalAmount)
-
             });
             let ticketInfo ={
                 code:crypto.randomUUID(),

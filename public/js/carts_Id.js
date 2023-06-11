@@ -47,7 +47,7 @@ let buy = async()=>{
       }})
     .then((response)=>response.json())
     .then((data)=>{
-        fetch( `/api/carts/${data.cart}/purchase `, {
+        fetch(`/api/carts/${data.cart}/purchase`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
