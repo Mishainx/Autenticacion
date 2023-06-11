@@ -44,7 +44,7 @@ const resetMail = async(req,res)=>{
     text: "Reseteo de password", // Texto plano
     html: `<div>
               <p> Para resetear su password ingrese al siguiente link:</p>
-              <a href="http://${req.host}/newpassword/${req.token}">http://localhost:8080/newpassword/${req.token} </a>
+              <a href="http://${req.host}/newpassword/${req.token}">http://${req.host}/newpassword/${req.token} </a>
           </div>`       
   })
 }
