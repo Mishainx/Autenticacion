@@ -62,7 +62,7 @@ let buy = async()=>{
                 cartContainer.innerHTML = ""
                 
                 let buyMessage = document.createElement("p")
-                buyMessage.innerText = data.payload.purcharser? `Su compra se ha realizado con éxito.\n\n Un email ha sido enviado a su casilla con la información de compra.`: ""
+                buyMessage.innerText = data.payload.purcharser? `Su compra se ha realizado con éxito.\n\n Un email ha sido enviado a su casilla con la información de compra.`: "Su compra se ha realizado con éxito"
                 buyMessage.classList.add("buyP")
                 buyMessage.style.textAlign = "center"
 
