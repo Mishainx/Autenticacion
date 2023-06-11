@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer"
 import config from "../config/config.js";
+import { urlencoded } from "express";
+import { resolveHostname } from "nodemailer/lib/shared/index.js";
 
 
 let transporter = nodemailer.createTransport({
@@ -34,6 +36,7 @@ const getMail = async (req,res)=>{
 }
 
 const resetMail = async(req,res)=>{
+  console.log(req)
   let info = await transporter.sendMail({
     from: `ecommerce <${config.MAIL_USER}>`, // direccion de envio
     to: `${req.email}`, // lista de quienes reciben
@@ -41,7 +44,7 @@ const resetMail = async(req,res)=>{
     text: "Reseteo de password", // Texto plano
     html: `<div>
               <p> Para resetear su password ingrese al siguiente link:</p>
-              <a href="http://localhost:8080/newpassword/${req.token}">http://localhost:8080/newpassword/${req.token} </a>
+              <a href="http://${req.host}/newpassword/${req.token}">http://localhost:8080/newpassword/${req.token} </a>
           </div>`       
   })
 }

@@ -68,7 +68,8 @@ const createToken = async(req,res)=>{
             let resetRequest={
                 email: user,
                 token: token,
-                expiration: Date.now() + 3600000
+                expiration: Date.now() + 3600000,
+                host: req.headers.host
             }
 
             let result = await resetPasswordRepository.createReset(resetRequest)
