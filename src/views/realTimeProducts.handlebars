@@ -16,7 +16,7 @@
 </div>
 
 <div id="addProductContainer">
-    <form action="" id="addForm">
+    <form action="" id="addForm" enctype="multipart/form-data">
         <h2> Agregar producto</h2>
         <input type="text" placeholder="Nombre del producto" name="productTitle" id="addTitleForm">
         <input type="text" placeholder="Descripción del producto" name="productDescription" id="addDescriptionForm" >
@@ -24,7 +24,6 @@
         <input type="text" placeholder="Código del producto" id="addCodeForm" name="addCodeForm" >
         <input type="text" placeholder="Categoría del producto" id="addCategory" name="addCategory" >
         <input type="number" placeholder="Stock del producto" id="addStockForm" name="addStockForm" >
-        <input type="file" name="thumbnail" id="addthumbnailForm">
         <select name="status" id="addStatusForm" required>
             <option value="True">True</option>
             <option value="False">False</option>
@@ -45,7 +44,6 @@
 
     </div>
 </div>
-
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>

@@ -109,7 +109,6 @@ app.use((req, res, next)=>{
 //socket
 socketModule(socketServer)
 
-
 //SwaggerOptions
 const SwaggerOptions = {
   definition: {
@@ -135,6 +134,6 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.use("/api/mail", mailRouter)
 app.use("/mockingproducts", mockingRouter)
-app.use("/loggerTest", loggerTestRouter)
+app.use("/loggertest", loggerTestRouter)
 app.use("/", rootRouter) // Manejo de ruta raíz
 app.use(errorHandler)

@@ -47,7 +47,6 @@ function createItem(){
     addBtnForm.addEventListener("click",(Event)=>{
         Event.preventDefault()
         
-        console.log(addTitleForm.value)
         const titleValidate = /^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(addTitleForm.value)
         const descriptionValidate = addDescriptionForm.value != undefined
         const priceValidate = addPriceForm.value > 0 

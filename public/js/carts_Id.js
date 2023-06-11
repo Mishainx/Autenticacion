@@ -39,7 +39,6 @@ socket.once("emptyCart", async (data)=>{
     purchaseButton.style.display = "none"
 })
 
-
 let buy = async()=>{
     fetch("/current", {
         method: "GET",

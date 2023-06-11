@@ -27,8 +27,10 @@ router.delete("/:cid/products/:pid", deleteItemFromCart);
 //La ruta api/carts/:cid/products/:pid (método put) actualiza la cantidad de ejemplares de un producto por parámetro
 router.put("/:cid/products/:pid", cartUpdateProduct)
 
+//La ruta api/carts/delete/:cid elimina un carrito de la base
 router.delete("/delete/:cid", deleteFromBase);
 
+//La ruta api/carts/:cid/purchase finaliza el proceso de compra y genera el ticket
 router.post("/:cid/purchase",purchase)
 
 export default router;

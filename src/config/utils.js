@@ -48,16 +48,3 @@ export const isTokenExpired = (date) =>{
   }
 }
 
-//Comprabaciones
-export const isValidId = async(id) => {
-  if(id.trim().length!=24){ 
-  console.log("asdasdasd")
-  return true
-  }
-  let userExist = await userRepository.getIdUsers(id)
-  console.log(userExist)
-  if(!userExist){
-    return false
-  }
-}
-

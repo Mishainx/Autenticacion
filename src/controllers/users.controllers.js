@@ -23,12 +23,11 @@ const getUsers = async(req,res)=>{
 const getUser = async(req,res)=>{
     try{
         let userId = req.params.uid
-
         if(userId.trim().length!=24){ 
             res.status(404).json({status:"error", message:"La Id ingresada es inválida"})
             req.logger.error(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - id inválida`)
             return
-        }
+}
 
         let userExist = await userRepository.getIdUsers(userId)
         if(!userExist){
@@ -111,6 +110,7 @@ const upgradeUser = async(req,res)=>{
 const deleteUser = async(req,res)=>{
     try{
         let id = req.params.uid
+        console.log(id)
 
         //Comprobación de validez de la id
         if(id.trim().length!=24){ 

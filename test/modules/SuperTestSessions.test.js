@@ -39,6 +39,7 @@ export const sessionsTest = () =>{
     
                 const{
                     statusCode,
+                    _body
                 } = await requester.post("/api/sessions/signup").send(userMock)
                 registeredUser= await userRepository.getOneUsers({email:userMock.email})
                 expect(statusCode).to.be.equal(200)
@@ -98,7 +99,7 @@ export const sessionsTest = () =>{
             it("El endpoint DELETE /api/users/delete/:uid debe eliminar el usuario de la base de datos", async()=>{
                 const{
                     _body
-                } = await requester.post(`/api/users/delete/${registeredUser._id}`)
+                } = await requester.delete(`/api/users/delete/${registeredUser._id}`)
                 expect(_body.status).to.be.deep.eql("success");
             })
         })

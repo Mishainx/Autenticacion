@@ -30,7 +30,7 @@ export const socketModule = (socketServer) =>{
             socketServer.emit("messageLogs", mensajes);
             messageRepository.CreateMessage(mensajes)  
           });
-           
+          
           socket.on("findCode",async(data)=>{
           socket.emit("findCodeResult", await productRepository.findCodeProducts(data))
           })

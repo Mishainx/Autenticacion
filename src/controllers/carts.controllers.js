@@ -292,7 +292,6 @@ const cartUpdateProduct =  async(req,res)=>{
 const deleteFromBase = async (req, res) => {
   try {
     let cartId = req.params.cid
-    console.log(cartId)
     if(cartId.trim().length!=24){
       res.status(400).send({error: "La Id del Cart ingresada no es válida"})
       return
