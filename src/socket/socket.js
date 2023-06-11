@@ -20,6 +20,8 @@ const messageRepository = new MessageRepository(message)
 const cartRepository = new CartRepository(carts)
 const productRepository = new ProductRepository(products)
 const mensajes = []
+import { messageModel } from "../dao/mongo/models/messages.model.js";
+
 
 export const socketModule = (socketServer) =>{
     socketServer.on("connection", async(socket) => {
