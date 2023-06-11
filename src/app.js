@@ -45,7 +45,7 @@ const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASS}${DB_CLUSTER}${DB_
 export const app = express();
 
 //Configuración del servidor
-const httpServer = app.listen(PORT,'127.0.0.1', async () => {
+const httpServer = app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
 });
 
