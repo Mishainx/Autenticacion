@@ -1,8 +1,5 @@
 import nodemailer from "nodemailer"
 import config from "../config/config.js";
-import { urlencoded } from "express";
-import { resolveHostname } from "nodemailer/lib/shared/index.js";
-
 
 let transporter = nodemailer.createTransport({
   service: config.MAIL_SERVICE,
