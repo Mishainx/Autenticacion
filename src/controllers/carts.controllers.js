@@ -316,7 +316,7 @@ const purchase = async (req, res) => {
     let buyData = req.body
     let ticket = await cartRepository.purchaseCarts(buyData)
     res.json({status:"success", message:"Compra finalizada con éxito", payload:ticket})
-    if(buyData.user && buyData.user != ""){
+      if(buyData.user && buyData.user != ""){
       await getMail(ticket)
     }
   } catch (err) {
