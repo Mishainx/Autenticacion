@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import config from "../config/config.js";
-import { messageModel } from "./mongo/models/messages.model.js";
 
 const DB_USER = config.DB_USER;
 const DB_PASS = config.DB_PASS;
@@ -31,7 +30,6 @@ const isValidStartData = () => {
 }
 
 const setVariables = async () => {
-  await messageModel.updateMany({},{status:false})
     
   const { default: ProductManager } = await import("./mongo/classes/product.mongo.js");
   Products = ProductManager

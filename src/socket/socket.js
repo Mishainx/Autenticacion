@@ -23,8 +23,9 @@ const mensajes = []
 
 export const socketModule = (socketServer) =>{
     socketServer.on("connection", async(socket) => {
-        let sessionUser = socket.request.session
-        let assignedCart = sessionUser.user?.cart
+      await messageModel.updateMany({},{status:false})
+      let sessionUser = socket.request.session
+      let assignedCart = sessionUser.user?.cart
         
           socket.on("message", (data) => {
             console.log(data)
