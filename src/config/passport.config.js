@@ -120,6 +120,7 @@ if(!validateAge){
     try{
       let user = await userRepository.getOneUsers({email:profile._json.email})
       if(!user){
+        console.log(profile)
         let newUser ={
           first_name: profile._json.login,
           last_name: profile._json.last_name? null : profile._json.last_name,
