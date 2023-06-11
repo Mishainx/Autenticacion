@@ -150,7 +150,6 @@ const getGitHub = async(req,res)=>{}
 const getGitHubCallback = async(req,res)=>{
     req.logger.info(`${req.method} en ${req.url}- ${new  Date().toLocaleTimeString()} - Github loggin`)
     req.session.user = req.user;
-    console.log(req.session.user)
     res.redirect('/api/views/products')
 }
 

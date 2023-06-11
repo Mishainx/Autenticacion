@@ -122,7 +122,7 @@ if(!validateAge){
       if(!user){
         console.log(profile)
         let newUser ={
-          first_name: profile._json.login,
+          first_name: profile._json.username,
           last_name: profile._json.last_name? null : profile._json.last_name,
           age: 18,
           email: profile._json.email,
