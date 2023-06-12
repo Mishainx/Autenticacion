@@ -36,7 +36,8 @@ const getUser = async(req,res)=>{
             return 
         }
 
-        let response = await userRepository.getIdUsers(userId)
+        let user = await userRepository.getIdUsers(userId)
+        let response = new CurrentDTO(user)
         res.status(200).json({status:"success",message:"Usuario encontrado exitosamente", payload: response})
     }
     catch(error){
