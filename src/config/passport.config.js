@@ -115,17 +115,19 @@ if(!validateAge){
   passport.use('github', new GitHubStrategy({
     clientID: config.CLIENT_ID_GITHUB,
     clientSecret: config.CLIENT_SECRET_GITHUB,
-    callBackURL: config.CALLBACK_URL_GITHUB
+    callBackURL: config.CALLBACK_URL_GITHUB,
+    scope: 'user:email'
   },async(accessToken,refreshToken,profile,done)=>{
     try{
-      let user = await userRepository.getOneUsers({email:profile._json.email})
+      let gitEmail = profile?.emails[0].value
+      let user = await userRepository.getOneUsers({email:gitEmail})
+
       if(!user){
-        console.log(profile)
         let newUser ={
           first_name: profile.username,
           last_name: profile._json.last_name? null : profile._json.last_name,
           age: 18,
-          email: profile._json.email,
+          email: gitEmail,
           password: "",
           cart: await cartRepository.createCarts()
         }
